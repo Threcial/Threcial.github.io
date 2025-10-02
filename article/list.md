@@ -1,2 +1,2 @@
 - [README](1.md)
-- [教程](SQL.md)
+- [教程](sql.md)
