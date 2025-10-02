@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Markdown文件渲染器</title>
+    <title>Threcial</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -125,6 +125,32 @@
             align-items: center;
         }
         
+        .search-container {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--sidebar-bg);
+            color: var(--text-color);
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 108, 247, 0.1);
+        }
+        
+        .search-box::placeholder {
+            color: var(--secondary-color);
+        }
+        
         .sidebar-content {
             flex: 1;
             overflow-y: auto;
@@ -152,6 +178,10 @@
         .file-item.active {
             background-color: var(--primary-color);
             color: white;
+        }
+        
+        .file-item.hidden {
+            display: none;
         }
         
         .file-item i {
@@ -340,6 +370,13 @@
             animation: spin 1s ease-in-out infinite;
         }
         
+        .no-results {
+            padding: 20px;
+            text-align: center;
+            color: var(--secondary-color);
+            font-style: italic;
+        }
+        
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
@@ -408,6 +445,9 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
+            <div class="search-container">
+                <input type="text" id="search-input" class="search-box" placeholder="搜索文章...">
+            </div>
             <div class="sidebar-content" id="file-list">
                 <div class="empty-state">
                     <div class="loading"></div>
@@ -468,6 +508,7 @@
         const closeSidebar = document.getElementById('close-sidebar');
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebar-overlay');
+        const searchInput = document.getElementById('search-input');
         
         // 存储加载的文件
         let files = [];
@@ -475,8 +516,11 @@
         
         // 预定义的文件名列表 - 您需要在这里添加您实际的文件名
         const predefinedFiles = [
-            '1.md',
-            'ex.md'
+            'README.md',
+            'getting-started.md',
+            'tutorial.md',
+            'api-reference.md',
+            'examples.md'
         ];
         
         // 事件监听
@@ -493,6 +537,7 @@
             sidebar.classList.remove('open');
             sidebarOverlay.classList.remove('open');
         });
+        searchInput.addEventListener('input', filterFiles);
         
         // 切换主题
         function toggleTheme() {
@@ -540,6 +585,7 @@
                             files.push({
                                 id: fileId,
                                 name: fileName,
+                                displayName: removeMDExtension(fileName),
                                 content: content,
                                 url: fileUrl
                             });
@@ -574,6 +620,7 @@
                                         files.push({
                                             id: fileId,
                                             name: fileName,
+                                            displayName: removeMDExtension(fileName),
                                             content: content,
                                             url: fileUrl
                                         });
@@ -590,7 +637,7 @@
                 }
                 
                 // 按文件名排序
-                files.sort((a, b) => a.name.localeCompare(b.name));
+                files.sort((a, b) => a.displayName.localeCompare(b.displayName));
                 
                 updateFileList();
                 
@@ -627,6 +674,42 @@
             }
         }
         
+        // 移除.md扩展名
+        function removeMDExtension(filename) {
+            return filename.replace(/\.md$/, '');
+        }
+        
+        // 过滤文件列表
+        function filterFiles() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const fileItems = document.querySelectorAll('.file-item');
+            let visibleCount = 0;
+            
+            fileItems.forEach(item => {
+                const displayName = item.querySelector('span').textContent.toLowerCase();
+                if (displayName.includes(searchTerm)) {
+                    item.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+            
+            // 显示无结果提示
+            const noResults = document.getElementById('no-results');
+            if (noResults) {
+                noResults.remove();
+            }
+            
+            if (visibleCount === 0 && searchTerm !== '') {
+                const noResultsElement = document.createElement('div');
+                noResultsElement.id = 'no-results';
+                noResultsElement.className = 'no-results';
+                noResultsElement.textContent = `没有找到包含"${searchTerm}"的文章`;
+                fileList.appendChild(noResultsElement);
+            }
+        }
+        
         // 更新文件列表
         function updateFileList() {
             if (files.length === 0) {
@@ -644,7 +727,7 @@
                 <div class="file-item ${activeFileId === file.id ? 'active' : ''}" 
                      data-file-id="${file.id}">
                     <i class="fas fa-file-alt"></i>
-                    <span>${file.name}</span>
+                    <span>${file.displayName}</span>
                 </div>
             `).join('');
             
@@ -669,7 +752,7 @@
             if (!file) return;
             
             activeFileId = fileId;
-            currentFileEl.textContent = file.name;
+            currentFileEl.textContent = file.displayName;
             
             // 更新文件信息
             const fileSize = new Blob([file.content]).size;
