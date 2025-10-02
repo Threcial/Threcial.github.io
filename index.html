@@ -395,9 +395,6 @@
             <button id="theme-toggle" class="theme-toggle">
                 <i class="fas fa-moon"></i> 暗色模式
             </button>
-            <button id="refresh-files" class="secondary">
-                <i class="fas fa-sync-alt"></i> 刷新列表
-            </button>
         </div>
     </header>
     
@@ -461,7 +458,6 @@
         
         // DOM 元素
         const themeToggle = document.getElementById('theme-toggle');
-        const refreshFilesBtn = document.getElementById('refresh-files');
         const fileList = document.getElementById('file-list');
         const htmlOutput = document.getElementById('html-output');
         const currentFileEl = document.getElementById('current-file');
@@ -477,9 +473,14 @@
         let files = [];
         let activeFileId = null;
         
+        // 预定义的文件名列表 - 您需要在这里添加您实际的文件名
+        const predefinedFiles = [
+            '1.md',
+            'ex.md'
+        ];
+        
         // 事件监听
         themeToggle.addEventListener('click', toggleTheme);
-        refreshFilesBtn.addEventListener('click', loadArticlesFromServer);
         openSidebar.addEventListener('click', () => {
             sidebar.classList.add('open');
             sidebarOverlay.classList.add('open');
@@ -523,58 +524,70 @@
                     </div>
                 `;
                 
-                // 尝试获取文章列表
-                const response = await fetch('./article/');
-                if (!response.ok) {
-                    throw new Error('无法访问article目录');
-                }
-                
-                const html = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                
-                // 提取文件链接
-                const links = doc.querySelectorAll('a[href$=".md"]');
                 files = [];
+                let loadedCount = 0;
                 
-                if (links.length === 0) {
-                    fileList.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-folder-open"></i>
-                            <h2>未找到文章</h2>
-                            <p>article目录下没有找到Markdown文件</p>
-                        </div>
-                    `;
-                    showNotification('未找到Markdown文件');
-                    return;
+                // 尝试加载预定义的文件
+                for (const fileName of predefinedFiles) {
+                    try {
+                        const fileUrl = `./article/${fileName}`;
+                        const response = await fetch(fileUrl);
+                        
+                        if (response.ok) {
+                            const content = await response.text();
+                            const fileId = Date.now() + loadedCount;
+                            
+                            files.push({
+                                id: fileId,
+                                name: fileName,
+                                content: content,
+                                url: fileUrl
+                            });
+                            loadedCount++;
+                        }
+                    } catch (error) {
+                        console.log(`文件 ${fileName} 不存在或无法访问`);
+                    }
                 }
                 
-                // 加载每个文件
-                const loadPromises = Array.from(links).map(async (link, index) => {
-                    const fileName = link.getAttribute('href');
-                    const fileUrl = `./article/${fileName}`;
-                    
+                // 如果没有找到任何文件，尝试扫描目录
+                if (files.length === 0) {
                     try {
-                        const fileResponse = await fetch(fileUrl);
-                        if (!fileResponse.ok) {
-                            throw new Error(`无法加载文件: ${fileName}`);
+                        const response = await fetch('./article/');
+                        if (response.ok) {
+                            const html = await response.text();
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(html, 'text/html');
+                            const links = doc.querySelectorAll('a[href$=".md"]');
+                            
+                            for (let i = 0; i < links.length; i++) {
+                                const link = links[i];
+                                const fileName = link.getAttribute('href');
+                                const fileUrl = `./article/${fileName}`;
+                                
+                                try {
+                                    const fileResponse = await fetch(fileUrl);
+                                    if (fileResponse.ok) {
+                                        const content = await fileResponse.text();
+                                        const fileId = Date.now() + i;
+                                        
+                                        files.push({
+                                            id: fileId,
+                                            name: fileName,
+                                            content: content,
+                                            url: fileUrl
+                                        });
+                                        loadedCount++;
+                                    }
+                                } catch (error) {
+                                    console.error(`加载文件 ${fileName} 失败:`, error);
+                                }
+                            }
                         }
-                        
-                        const content = await fileResponse.text();
-                        const fileId = Date.now() + index;
-                        
-                        files.push({
-                            id: fileId,
-                            name: fileName,
-                            content: content,
-                            url: fileUrl
-                        });
-                    } catch (error) {
-                        console.error(`加载文件 ${fileName} 失败:`, error);
+                    } catch (dirError) {
+                        console.log('无法访问article目录，使用预定义文件列表');
                     }
-                });
-                
-                await Promise.all(loadPromises);
+                }
                 
                 // 按文件名排序
                 files.sort((a, b) => a.name.localeCompare(b.name));
@@ -585,6 +598,17 @@
                     // 自动加载第一个文件
                     renderFile(files[0].id);
                     showNotification(`成功加载 ${files.length} 篇文章`);
+                } else {
+                    fileList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-folder-open"></i>
+                            <h2>未找到文章</h2>
+                            <p>article目录下没有找到Markdown文件</p>
+                            <p style="margin-top: 20px; font-size: 0.9rem;">
+                                请在predefinedFiles数组中添加您的文件名，或确保服务器配置允许目录列表。
+                            </p>
+                        </div>
+                    `;
                 }
                 
             } catch (error) {
@@ -593,9 +617,9 @@
                     <div class="empty-state">
                         <i class="fas fa-exclamation-triangle"></i>
                         <h2>加载失败</h2>
-                        <p>无法访问article目录: ${error.message}</p>
+                        <p>无法加载文章: ${error.message}</p>
                         <p style="margin-top: 20px; font-size: 0.9rem;">
-                            请确保您的服务器配置允许目录列表，且article目录存在并包含Markdown文件。
+                            请检查predefinedFiles数组中的文件名是否正确。
                         </p>
                     </div>
                 `;
