@@ -330,6 +330,20 @@
             font-size: 0.9rem;
         }
         
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
         @media (max-width: 768px) {
             .sidebar {
                 position: absolute;
@@ -381,10 +395,9 @@
             <button id="theme-toggle" class="theme-toggle">
                 <i class="fas fa-moon"></i> 暗色模式
             </button>
-            <button id="load-files" class="secondary">
-                <i class="fas fa-folder-open"></i> 加载文件
+            <button id="refresh-files" class="secondary">
+                <i class="fas fa-sync-alt"></i> 刷新列表
             </button>
-            <input type="file" id="file-input" class="file-input" multiple accept=".md,.markdown">
         </div>
     </header>
     
@@ -393,16 +406,16 @@
         
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <h2>文件列表</h2>
+                <h2>文章列表</h2>
                 <button class="menu-toggle" id="close-sidebar">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="sidebar-content" id="file-list">
                 <div class="empty-state">
-                    <i class="fas fa-folder-open"></i>
-                    <h2>暂无文件</h2>
-                    <p>点击"加载文件"按钮添加Markdown文件</p>
+                    <div class="loading"></div>
+                    <h2>加载中...</h2>
+                    <p>正在扫描article目录下的Markdown文件</p>
                 </div>
             </div>
         </div>
@@ -412,15 +425,15 @@
                 <button class="menu-toggle" id="open-sidebar">
                     <i class="fas fa-bars"></i>
                 </button>
-                <h2 id="current-file">选择文件开始浏览</h2>
+                <h2 id="current-file">选择文章开始浏览</h2>
                 <div class="file-info" id="file-info"></div>
             </div>
             <div class="content-body">
                 <div id="html-output">
                     <div class="empty-state">
                         <i class="fas fa-file-alt"></i>
-                        <h2>未选择文件</h2>
-                        <p>从左侧文件列表中选择一个Markdown文件，或点击"加载文件"按钮添加新文件</p>
+                        <h2>未选择文章</h2>
+                        <p>从左侧文章列表中选择一个Markdown文件开始阅读</p>
                     </div>
                 </div>
             </div>
@@ -448,8 +461,7 @@
         
         // DOM 元素
         const themeToggle = document.getElementById('theme-toggle');
-        const loadFilesBtn = document.getElementById('load-files');
-        const fileInput = document.getElementById('file-input');
+        const refreshFilesBtn = document.getElementById('refresh-files');
         const fileList = document.getElementById('file-list');
         const htmlOutput = document.getElementById('html-output');
         const currentFileEl = document.getElementById('current-file');
@@ -467,8 +479,7 @@
         
         // 事件监听
         themeToggle.addEventListener('click', toggleTheme);
-        loadFilesBtn.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', handleFileSelect);
+        refreshFilesBtn.addEventListener('click', loadArticlesFromServer);
         openSidebar.addEventListener('click', () => {
             sidebar.classList.add('open');
             sidebarOverlay.classList.add('open');
@@ -501,48 +512,95 @@
             themeToggle.innerHTML = '<i class="fas fa-sun"></i> 亮色模式';
         }
         
-        // 处理文件选择
-        function handleFileSelect(event) {
-            const selectedFiles = event.target.files;
-            if (selectedFiles.length === 0) return;
-            
-            for (let i = 0; i < selectedFiles.length; i++) {
-                const file = selectedFiles[i];
+        // 从服务器加载文章列表
+        async function loadArticlesFromServer() {
+            try {
+                fileList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="loading"></div>
+                        <h2>加载中...</h2>
+                        <p>正在扫描article目录下的Markdown文件</p>
+                    </div>
+                `;
                 
-                // 检查是否为Markdown文件
-                if (!file.name.toLowerCase().endsWith('.md') && 
-                    !file.name.toLowerCase().endsWith('.markdown')) {
-                    showNotification(`"${file.name}" 不是Markdown文件，已跳过`);
-                    continue;
+                // 尝试获取文章列表
+                const response = await fetch('./article/');
+                if (!response.ok) {
+                    throw new Error('无法访问article目录');
                 }
                 
-                // 检查是否已存在同名文件
-                if (files.some(f => f.name === file.name)) {
-                    showNotification(`"${file.name}" 已存在，已跳过`);
-                    continue;
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // 提取文件链接
+                const links = doc.querySelectorAll('a[href$=".md"]');
+                files = [];
+                
+                if (links.length === 0) {
+                    fileList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-folder-open"></i>
+                            <h2>未找到文章</h2>
+                            <p>article目录下没有找到Markdown文件</p>
+                        </div>
+                    `;
+                    showNotification('未找到Markdown文件');
+                    return;
                 }
                 
-                // 读取文件内容
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const fileId = Date.now() + i;
-                    files.push({
-                        id: fileId,
-                        name: file.name,
-                        content: e.target.result,
-                        lastModified: file.lastModified,
-                        size: file.size
-                    });
+                // 加载每个文件
+                const loadPromises = Array.from(links).map(async (link, index) => {
+                    const fileName = link.getAttribute('href');
+                    const fileUrl = `./article/${fileName}`;
                     
-                    updateFileList();
-                    renderFile(fileId);
-                    showNotification(`"${file.name}" 加载成功`);
-                };
-                reader.readAsText(file);
+                    try {
+                        const fileResponse = await fetch(fileUrl);
+                        if (!fileResponse.ok) {
+                            throw new Error(`无法加载文件: ${fileName}`);
+                        }
+                        
+                        const content = await fileResponse.text();
+                        const fileId = Date.now() + index;
+                        
+                        files.push({
+                            id: fileId,
+                            name: fileName,
+                            content: content,
+                            url: fileUrl
+                        });
+                    } catch (error) {
+                        console.error(`加载文件 ${fileName} 失败:`, error);
+                    }
+                });
+                
+                await Promise.all(loadPromises);
+                
+                // 按文件名排序
+                files.sort((a, b) => a.name.localeCompare(b.name));
+                
+                updateFileList();
+                
+                if (files.length > 0) {
+                    // 自动加载第一个文件
+                    renderFile(files[0].id);
+                    showNotification(`成功加载 ${files.length} 篇文章`);
+                }
+                
+            } catch (error) {
+                console.error('加载文章失败:', error);
+                fileList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h2>加载失败</h2>
+                        <p>无法访问article目录: ${error.message}</p>
+                        <p style="margin-top: 20px; font-size: 0.9rem;">
+                            请确保您的服务器配置允许目录列表，且article目录存在并包含Markdown文件。
+                        </p>
+                    </div>
+                `;
+                showNotification('加载文章失败: ' + error.message);
             }
-            
-            // 重置文件输入，允许再次选择相同文件
-            fileInput.value = '';
         }
         
         // 更新文件列表
@@ -551,8 +609,8 @@
                 fileList.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-folder-open"></i>
-                        <h2>暂无文件</h2>
-                        <p>点击"加载文件"按钮添加Markdown文件</p>
+                        <h2>未找到文章</h2>
+                        <p>article目录下没有找到Markdown文件</p>
                     </div>
                 `;
                 return;
@@ -590,12 +648,10 @@
             currentFileEl.textContent = file.name;
             
             // 更新文件信息
-            const fileSize = formatFileSize(file.size);
-            const lastModified = new Date(file.lastModified).toLocaleString();
+            const fileSize = new Blob([file.content]).size;
+            const formattedSize = formatFileSize(fileSize);
             fileInfo.innerHTML = `
-                <span>${fileSize}</span>
-                <span>•</span>
-                <span>修改: ${lastModified}</span>
+                <span>${formattedSize}</span>
             `;
             
             // 渲染Markdown
@@ -625,18 +681,10 @@
             }, 3000);
         }
         
-        // 示例：如果没有任何文件，显示示例内容
-        setTimeout(() => {
-            if (files.length === 0) {
-                htmlOutput.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-file-alt"></i>
-                        <h2>未选择文件</h2>
-                        <p>从左侧文件列表中选择一个Markdown文件，或点击"加载文件"按钮添加新文件</p>
-                    </div>
-                `;
-            }
-        }, 100);
+        // 页面加载完成后自动扫描article目录
+        document.addEventListener('DOMContentLoaded', function() {
+            loadArticlesFromServer();
+        });
     </script>
 </body>
 </html>
