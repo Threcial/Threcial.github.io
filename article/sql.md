@@ -1,8 +1,3 @@
----
-title: SQL注入
-category: SQL注入
----
-
 #  SQL注入中的可利用的库表和列
 
 `information_schema.tables` *所有库和表的统计*
