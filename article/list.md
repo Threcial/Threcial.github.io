@@ -1,1 +1,3 @@
-- [教程](sql.md)
+tr.md
+sql.md
+t.md
