@@ -1,3 +1,2 @@
 sql.md
-t.md
-new.md
+题解.md
