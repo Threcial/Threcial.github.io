@@ -15,37 +15,29 @@
         }
         
         :root {
-            --primary-color: #4a6cf7;
-            --secondary-color: #6c757d;
-            --bg-color: #f8f9fa;
-            --sidebar-bg: #ffffff;
-            --content-bg: #ffffff;
-            --text-color: #333333;
-            --border-color: #e1e5e9;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --sidebar-width: 280px;
-        }
-        
-        .dark-theme {
-            --primary-color: #6d8cff;
-            --secondary-color: #a0aec0;
-            --bg-color: #1a202c;
-            --sidebar-bg: #2d3748;
-            --content-bg: #2d3748;
-            --text-color: #e2e8f0;
-            --border-color: #4a5568;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-        
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: all 0.3s ease;
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
+    --primary-color: #2f81f7;
+    --secondary-color: #7d8590;
+    --bg-color: #0d1117;
+    --sidebar-bg: #161b22;
+    --content-bg: #0d1117;
+    --text-color: #e6edf3;
+    --border-color: #30363d;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --sidebar-width: 280px;
+}
+
+/* 删除所有 .dark-theme 相关的样式规则 */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* 删除所有 .dark-theme 选择器的样式 */
         
         header {
             display: flex;
@@ -236,16 +228,12 @@
             max-width: 400px;
             line-height: 1.6;
         }
-/* GitHub风格的Markdown渲染样式 */
+/* GitHub暗色风格的Markdown渲染样式 */
 #html-output {
     line-height: 1.6;
-    color: #24292f;
+    color: #e6edf3;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     font-size: 16px;
-}
-
-.dark-theme #html-output {
-    color: #e6edf3;
 }
 
 #html-output > *:first-child {
@@ -262,26 +250,19 @@
     margin-bottom: 16px;
     font-weight: 600;
     line-height: 1.25;
+    color: #e6edf3;
 }
 
 #html-output h1 {
     padding-bottom: 0.3em;
     font-size: 2em;
-    border-bottom: 1px solid #d0d7de;
-}
-
-.dark-theme #html-output h1 {
-    border-bottom-color: #30363d;
+    border-bottom: 1px solid #30363d;
 }
 
 #html-output h2 {
     padding-bottom: 0.3em;
     font-size: 1.5em;
-    border-bottom: 1px solid #d0d7de;
-}
-
-.dark-theme #html-output h2 {
-    border-bottom-color: #30363d;
+    border-bottom: 1px solid #30363d;
 }
 
 #html-output h3 {
@@ -298,57 +279,42 @@
 
 #html-output h6 {
     font-size: 0.85em;
-    color: #656d76;
-}
-
-.dark-theme #html-output h6 {
     color: #7d8590;
 }
 
 #html-output p {
     margin-top: 0;
     margin-bottom: 16px;
+    color: #e6edf3;
 }
 
 #html-output blockquote {
     padding: 0 1em;
-    color: #656d76;
-    border-left: 0.25em solid #d0d7de;
-    margin: 0 0 16px 0;
-}
-
-.dark-theme #html-output blockquote {
     color: #7d8590;
-    border-left-color: #30363d;
+    border-left: 0.25em solid #30363d;
+    margin: 0 0 16px 0;
+    background-color: rgba(110, 118, 129, 0.1);
 }
 
 #html-output pre {
     padding: 16px;
     overflow: auto;
-    font-size: 14px; /* 增大字体大小 */
+    font-size: 14px;
     line-height: 1.45;
-    background-color: #f6f8fa;
+    background-color: #161b22;
     border-radius: 6px;
     margin: 0 0 16px 0;
-    border: 1px solid #d0d7de; /* 添加边框提高清晰度 */
-}
-
-.dark-theme #html-output pre {
-    background-color: #161b22;
-    border-color: #30363d;
+    border: 1px solid #30363d;
 }
 
 #html-output code {
     padding: 0.2em 0.4em;
     margin: 0;
-    font-size: 14px; /* 增大行内代码字体大小 */
-    background-color: rgba(175, 184, 193, 0.2);
+    font-size: 14px;
+    background-color: rgba(110, 118, 129, 0.4);
     border-radius: 6px;
     font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
-}
-
-.dark-theme #html-output code {
-    background-color: rgba(110, 118, 129, 0.4);
+    color: #e6edf3;
 }
 
 #html-output pre code {
@@ -356,12 +322,8 @@
     margin: 0;
     background-color: transparent;
     border: 0;
-    font-size: 14px; /* 确保代码块内字体大小一致 */
-    color: #24292f; /* 亮色模式下代码文字颜色 */
-}
-
-.dark-theme #html-output pre code {
-    color: #e6edf3; /* 暗色模式下代码文字颜色 */
+    font-size: 14px;
+    color: #e6edf3;
 }
 
 #html-output table {
@@ -375,40 +337,23 @@
 }
 
 #html-output tr {
-    background-color: #ffffff;
-    border-top: 1px solid #d0d7de;
-}
-
-.dark-theme #html-output tr {
     background-color: #0d1117;
-    border-top-color: #30363d;
+    border-top: 1px solid #30363d;
 }
 
 #html-output tr:nth-child(2n) {
-    background-color: #f6f8fa;
-}
-
-.dark-theme #html-output tr:nth-child(2n) {
     background-color: #161b22;
 }
 
 #html-output th, 
 #html-output td {
     padding: 6px 13px;
-    border: 1px solid #d0d7de;
-}
-
-.dark-theme #html-output th,
-.dark-theme #html-output td {
-    border-color: #30363d;
+    border: 1px solid #30363d;
+    color: #e6edf3;
 }
 
 #html-output th {
     font-weight: 600;
-    background-color: #f6f8fa;
-}
-
-.dark-theme #html-output th {
     background-color: #161b22;
 }
 
@@ -421,6 +366,7 @@
 
 #html-output li {
     word-wrap: break-all;
+    color: #e6edf3;
 }
 
 #html-output li + li {
@@ -430,38 +376,42 @@
 #html-output img {
     max-width: 100%;
     box-sizing: content-box;
-    background-color: #ffffff;
-    margin: 0 0 16px 0;
-}
-
-.dark-theme #html-output img {
     background-color: #0d1117;
+    margin: 0 0 16px 0;
 }
 
 #html-output hr {
     height: 0.25em;
     padding: 0;
     margin: 24px 0;
-    background-color: #d0d7de;
+    background-color: #30363d;
     border: 0;
     border-radius: 1px;
 }
 
-.dark-theme #html-output hr {
-    background-color: #30363d;
-}
-
 #html-output a {
-    color: #0969da;
-    text-decoration: none;
-}
-
-.dark-theme #html-output a {
     color: #2f81f7;
+    text-decoration: none;
 }
 
 #html-output a:hover {
     text-decoration: underline;
+}
+
+/* GitHub暗色风格的代码块高亮 */
+.hljs {
+    background: transparent !important;
+    font-size: 14px !important;
+}
+
+/* 任务列表 */
+#html-output .task-list-item {
+    list-style-type: none;
+}
+
+#html-output .task-list-item-checkbox {
+    margin: 0 0.2em 0.25em -1.6em;
+    vertical-align: middle;
 }
 
 /* GitHub风格的代码块高亮 */
@@ -584,11 +534,6 @@
 <body>
     <header>
         <h1>Threcial</h1>
-        <div class="controls">
-            <button id="theme-toggle" class="theme-toggle">
-                <i class="fas fa-moon"></i> 暗色模式
-            </button>
-        </div>
     </header>
     
     <div class="container">
@@ -653,7 +598,6 @@
         });
         
         // DOM 元素
-        const themeToggle = document.getElementById('theme-toggle');
         const fileList = document.getElementById('file-list');
         const htmlOutput = document.getElementById('html-output');
         const currentFileEl = document.getElementById('current-file');
@@ -676,7 +620,6 @@
         ];
         
         // 事件监听
-        themeToggle.addEventListener('click', toggleTheme);
         openSidebar.addEventListener('click', () => {
             sidebar.classList.add('open');
             sidebarOverlay.classList.add('open');
