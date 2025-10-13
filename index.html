@@ -460,20 +460,23 @@
         
         @media (max-width: 768px) {
             .sidebar {
-                position: absolute;
+                position: fixed;
                 left: 0;
                 top: 0;
                 height: 100%;
                 z-index: 20;
                 transform: translateX(-100%);
+                width: 85%;
+                max-width: 300px;
             }
             
             .sidebar.open {
                 transform: translateX(0);
+                box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
             }
             
             .sidebar-overlay {
-                position: absolute;
+                position: fixed;
                 top: 0;
                 left: 0;
                 right: 0;
@@ -490,6 +493,36 @@
             .menu-toggle {
                 display: flex;
             }
+            
+            .content-header {
+                padding: 15px 20px;
+            }
+            
+            .content-body {
+                padding: 20px;
+            }
+            
+            /* 移动端菜单按钮更明显 */
+            .menu-toggle {
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 6px;
+                padding: 10px 12px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            }
+            
+            /* 移动端提示文本 */
+            .mobile-hint {
+                display: block;
+                font-size: 0.9rem;
+                color: var(--secondary-color);
+                margin-top: 5px;
+            }
+        }
+        
+        /* 电脑端隐藏移动端提示 */
+        .mobile-hint {
+            display: none;
         }
         
         .menu-toggle {
@@ -537,7 +570,10 @@
                 <button class="menu-toggle" id="open-sidebar">
                     <i class="fas fa-bars"></i>
                 </button>
-                <h2 id="current-file">选择文章开始浏览</h2>
+                <div>
+                    <h2 id="current-file">选择文章开始浏览</h2>
+                    <div class="mobile-hint">点击上方按钮打开文章列表</div>
+                </div>
                 <div class="file-info" id="file-info"></div>
             </div>
             <div class="content-body">
@@ -587,10 +623,11 @@
         // 存储加载的文件
         let files = [];
         let activeFileId = null;
-        
+        let fileNames = []; // 存储所有文件名
+
         // 预定义的文件名列表
         const predefinedFiles = [
-            '首页.md',  // 将首页.md放在第一位
+            '首页.md',
             'sql.md'
         ];
         
@@ -615,6 +652,66 @@
             return urlParams.get('load') || '';
         }
         
+        // 修复图片路径
+        function fixImagePaths(html, fileName) {
+            // 创建一个临时div来操作DOM
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            
+            // 找到所有的图片元素
+            const images = tempDiv.querySelectorAll('img');
+            
+            images.forEach(img => {
+                let src = img.getAttribute('src');
+                
+                // 如果图片路径以 ./imgs/ 开头，修正为正确的路径
+                if (src && src.startsWith('./imgs/')) {
+                    // 在线环境使用相对于根目录的路径
+                    const correctedSrc = `/article/imgs/${src.replace('./imgs/', '')}`;
+                    img.setAttribute('src', correctedSrc);
+                }
+                // 处理其他可能的相对路径情况
+                else if (src && (src.startsWith('imgs/') || src.startsWith('../imgs/'))) {
+                    const correctedSrc = `/article/imgs/${src.split('/').pop()}`;
+                    img.setAttribute('src', correctedSrc);
+                }
+            });
+            
+            return tempDiv.innerHTML;
+        }
+        
+        // 加载单个文件内容
+        async function loadFileContent(fileName, fileId) {
+            try {
+                const fileUrl = `./article/${fileName}`;
+                const response = await fetch(fileUrl);
+                
+                if (response.ok) {
+                    const content = await response.text();
+                    return {
+                        id: fileId,
+                        name: fileName,
+                        displayName: removeMDExtension(fileName),
+                        content: content,
+                        url: fileUrl,
+                        loaded: true
+                    };
+                } else {
+                    throw new Error(`无法加载文件: ${fileName}`);
+                }
+            } catch (error) {
+                console.error(`加载文件 ${fileName} 失败:`, error);
+                return {
+                    id: fileId,
+                    name: fileName,
+                    displayName: removeMDExtension(fileName),
+                    content: `# 加载失败\n\n无法加载文件: ${fileName}\n\n错误信息: ${error.message}`,
+                    url: `./article/${fileName}`,
+                    loaded: false
+                };
+            }
+        }
+        
         // 从服务器加载文章列表
         async function loadArticlesFromServer() {
             try {
@@ -627,10 +724,9 @@
                 `;
                 
                 files = [];
+                fileNames = [];
                 
                 // 首先尝试加载list.md文件来获取文件列表
-                let fileNames = [];
-                
                 try {
                     const listResponse = await fetch('./article/list.md');
                     if (listResponse.ok) {
@@ -646,74 +742,55 @@
                     fileNames = [...predefinedFiles];
                 }
                 
-                // 并行加载所有文件
-                const filePromises = fileNames.map(async (fileName, index) => {
-                    try {
-                        const fileUrl = `./article/${fileName}`;
-                        const response = await fetch(fileUrl);
-                        
-                        if (response.ok) {
-                            const content = await response.text();
-                            return {
-                                id: Date.now() + index,
-                                name: fileName,
-                                displayName: removeMDExtension(fileName),
-                                content: content,
-                                url: fileUrl
-                            };
-                        }
-                    } catch (error) {
-                        console.log(`文件 ${fileName} 不存在或无法访问`);
-                        return null;
-                    }
-                });
-                
-                // 等待所有文件加载完成
-                const fileResults = await Promise.allSettled(filePromises);
-                
-                // 过滤出成功加载的文件
-                files = fileResults
-                    .filter(result => result.status === 'fulfilled' && result.value !== null)
-                    .map(result => result.value);
-                
                 // 确保首页.md在第一位
-                files.sort((a, b) => {
-                    if (a.name === '首页.md') return -1;
-                    if (b.name === '首页.md') return 1;
-                    return a.displayName.localeCompare(b.displayName);
+                fileNames.sort((a, b) => {
+                    if (a === '首页.md') return -1;
+                    if (b === '首页.md') return 1;
+                    return removeMDExtension(a).localeCompare(removeMDExtension(b));
                 });
                 
+                // 创建文件对象（只有文件名，没有内容）
+                files = fileNames.map((fileName, index) => ({
+                    id: Date.now() + index,
+                    name: fileName,
+                    displayName: removeMDExtension(fileName),
+                    content: null,
+                    url: `./article/${fileName}`,
+                    loaded: false
+                }));
+                
+                // 更新文件列表（显示所有文件）
                 updateFileList();
                 
-                if (files.length > 0) {
-                    // 检查URL参数中是否有要加载的文件
-                    const loadFile = getLoadFileFromURL();
-                    let fileToLoad = files[0]; // 默认加载第一个文件（首页.md）
-                    
-                    if (loadFile) {
-                        // 查找URL参数指定的文件
-                        const targetFile = files.find(file => 
-                            file.name === loadFile || 
-                            file.name === `${loadFile}.md` || 
-                            file.displayName === loadFile
-                        );
-                        if (targetFile) {
-                            fileToLoad = targetFile;
-                        }
+                // 检查URL参数中是否有要加载的文件
+                const loadFile = getLoadFileFromURL();
+                let fileToLoad = files[0]; // 默认加载第一个文件（首页.md）
+                
+                if (loadFile) {
+                    // 查找URL参数指定的文件
+                    const targetFile = files.find(file => 
+                        file.name === loadFile || 
+                        file.name === `${loadFile}.md` || 
+                        file.displayName === loadFile
+                    );
+                    if (targetFile) {
+                        fileToLoad = targetFile;
                     }
-                    
-                    // 加载选定的文件
-                    renderFile(fileToLoad.id);
-                    showNotification(`成功加载 ${files.length} 篇文章`);
-                } else {
-                    fileList.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-folder-open"></i>
-                            <h2>未找到文章</h2>
-                            <p>article目录下没有找到Markdown文件</p>
-                        </div>
-                    `;
                 }
+                
+                // 只加载选定的文件内容
+                const loadedFile = await loadFileContent(fileToLoad.name, fileToLoad.id);
+                
+                // 更新文件列表中的对应文件
+                const fileIndex = files.findIndex(f => f.id === fileToLoad.id);
+                if (fileIndex !== -1) {
+                    files[fileIndex] = loadedFile;
+                    activeFileId = loadedFile.id;
+                }
+                
+                // 渲染选定的文件
+                renderFile(loadedFile.id);
+                showNotification(`成功加载 ${files.length} 篇文章列表`);
                 
             } catch (error) {
                 console.error('加载文章失败:', error);
@@ -808,9 +885,9 @@
             
             // 添加点击事件
             document.querySelectorAll('.file-item').forEach(item => {
-                item.addEventListener('click', function() {
+                item.addEventListener('click', async function() {
                     const fileId = parseInt(this.getAttribute('data-file-id'));
-                    renderFile(fileId);
+                    await renderFile(fileId);
                     
                     // 移动端点击后关闭侧边栏
                     if (window.innerWidth <= 768) {
@@ -822,22 +899,50 @@
         }
         
         // 渲染文件内容
-        function renderFile(fileId) {
+        async function renderFile(fileId) {
             const file = files.find(f => f.id === fileId);
             if (!file) return;
             
+            // 如果文件尚未加载，先加载内容
+            if (!file.loaded) {
+                // 显示加载中状态
+                htmlOutput.innerHTML = `
+                    <div class="empty-state">
+                        <div class="loading"></div>
+                        <h2>加载中...</h2>
+                        <p>正在加载 ${file.displayName}</p>
+                    </div>
+                `;
+                
+                const loadedFile = await loadFileContent(file.name, file.id);
+                
+                // 更新文件列表中的对应文件
+                const fileIndex = files.findIndex(f => f.id === fileId);
+                if (fileIndex !== -1) {
+                    files[fileIndex] = loadedFile;
+                }
+            }
+            
+            // 获取更新后的文件对象
+            const updatedFile = files.find(f => f.id === fileId);
+            if (!updatedFile) return;
+            
             activeFileId = fileId;
-            currentFileEl.textContent = file.displayName;
+            currentFileEl.textContent = updatedFile.displayName;
             
             // 更新文件信息
-            const fileSize = new Blob([file.content]).size;
+            const fileSize = new Blob([updatedFile.content]).size;
             const formattedSize = formatFileSize(fileSize);
             fileInfo.innerHTML = `
                 <span>${formattedSize}</span>
             `;
             
             // 渲染Markdown
-            const html = marked.parse(file.content);
+            let html = marked.parse(updatedFile.content);
+            
+            // 修复图片路径
+            html = fixImagePaths(html, updatedFile.name);
+            
             htmlOutput.innerHTML = html;
             
             // 更新文件列表中的活动状态
