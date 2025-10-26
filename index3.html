@@ -174,9 +174,14 @@
             overflow: hidden;
         }
         
-        /* 移除内容标题栏 */
+        /* 修改内容标题栏 - 只保留菜单按钮 */
         .content-header {
-            display: none;
+            padding: 15px 30px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            background-color: var(--content-bg);
+            min-height: 60px;
         }
         
         .content-body {
@@ -589,6 +594,10 @@
                 display: flex;
             }
             
+            .content-header {
+                padding: 15px 20px;
+            }
+            
             .content-body {
                 padding: 20px;
             }
@@ -657,7 +666,12 @@
         </div>
         
         <div class="content">
-            <!-- 已移除内容标题栏 -->
+            <!-- 修改后的内容标题栏 - 只保留菜单按钮 -->
+            <div class="content-header">
+                <button class="menu-toggle" id="open-sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
             <div class="content-body">
                 <div class="content-main">
                     <div id="html-output">
@@ -706,8 +720,6 @@
         // DOM 元素
         const fileList = document.getElementById('file-list');
         const htmlOutput = document.getElementById('html-output');
-        const currentFileEl = document.getElementById('current-file');
-        const fileInfo = document.getElementById('file-info');
         const notification = document.getElementById('notification');
         const notificationText = document.getElementById('notification-text');
         const openSidebar = document.getElementById('open-sidebar');
@@ -722,34 +734,45 @@
         let activeFileId = null;
         let fileNames = []; // 存储所有文件名
 
-        // 预定义的文件名列表 - 保持原始逻辑
+        // 预定义的文件名列表
         const predefinedFiles = [
             '首页.md',
             'sql.md'
         ];
         
-        // 事件监听 - 保持原始逻辑
-        openSidebar.addEventListener('click', () => {
-            sidebar.classList.add('open');
-            sidebarOverlay.classList.add('open');
-        });
-        closeSidebar.addEventListener('click', () => {
-            sidebar.classList.remove('open');
-            sidebarOverlay.classList.remove('open');
-        });
-        sidebarOverlay.addEventListener('click', () => {
-            sidebar.classList.remove('open');
-            sidebarOverlay.classList.remove('open');
-        });
-        searchInput.addEventListener('input', filterFiles);
+        // 检查元素是否存在再添加事件监听
+        if (openSidebar) {
+            openSidebar.addEventListener('click', () => {
+                sidebar.classList.add('open');
+                sidebarOverlay.classList.add('open');
+            });
+        }
         
-        // 从URL参数获取要加载的文件名 - 保持原始逻辑
+        if (closeSidebar) {
+            closeSidebar.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                sidebarOverlay.classList.remove('open');
+            });
+        }
+        
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                sidebarOverlay.classList.remove('open');
+            });
+        }
+        
+        if (searchInput) {
+            searchInput.addEventListener('input', filterFiles);
+        }
+        
+        // 从URL参数获取要加载的文件名
         function getLoadFileFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get('load') || '';
         }
         
-        // 修复图片路径 - 保持原始逻辑
+        // 修复图片路径
         function fixImagePaths(html, fileName) {
             // 创建一个临时div来操作DOM
             const tempDiv = document.createElement('div');
@@ -777,7 +800,7 @@
             return tempDiv.innerHTML;
         }
         
-        // 生成文章导航 - 保持原始逻辑
+        // 生成文章导航
         function generateTOC() {
             const headings = htmlOutput.querySelectorAll('h1, h2');
             
@@ -838,7 +861,7 @@
             });
         }
         
-        // 加载单个文件内容 - 保持原始逻辑
+        // 加载单个文件内容
         async function loadFileContent(fileName, fileId) {
             try {
                 const fileUrl = `./article/${fileName}`;
@@ -870,7 +893,7 @@
             }
         }
         
-        // 从服务器加载文章列表 - 保持原始逻辑
+        // 从服务器加载文章列表
         async function loadArticlesFromServer() {
             try {
                 fileList.innerHTML = `
@@ -963,7 +986,7 @@
             }
         }
         
-        // 解析list.md文件内容，提取文件名 - 保持原始逻辑
+        // 解析list.md文件内容，提取文件名
         function parseListMD(content) {
             const files = [];
             const lines = content.split('\n');
@@ -984,12 +1007,12 @@
             return files;
         }
         
-        // 移除.md扩展名 - 保持原始逻辑
+        // 移除.md扩展名
         function removeMDExtension(filename) {
             return filename.replace(/\.md$/, '');
         }
         
-        // 过滤文件列表 - 保持原始逻辑
+        // 过滤文件列表
         function filterFiles() {
             const searchTerm = searchInput.value.toLowerCase().trim();
             const fileItems = document.querySelectorAll('.file-item');
@@ -1020,7 +1043,7 @@
             }
         }
         
-        // 更新文件列表 - 保持原始逻辑
+        // 更新文件列表
         function updateFileList() {
             if (files.length === 0) {
                 fileList.innerHTML = `
@@ -1056,7 +1079,7 @@
             });
         }
         
-        // 渲染文件内容 - 保持原始逻辑，但移除标题栏相关代码
+        // 渲染文件内容
         async function renderFile(fileId) {
             const file = files.find(f => f.id === fileId);
             if (!file) return;
@@ -1102,7 +1125,7 @@
             updateFileList();
         }
         
-        // 格式化文件大小 - 保持原始逻辑
+        // 格式化文件大小
         function formatFileSize(bytes) {
             if (bytes === 0) return '0 Bytes';
             const k = 1024;
@@ -1111,7 +1134,7 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
         
-        // 显示通知 - 保持原始逻辑
+        // 显示通知
         function showNotification(message) {
             notificationText.textContent = message;
             notification.classList.add('show');
@@ -1121,7 +1144,7 @@
             }, 3000);
         }
         
-        // 页面加载完成后自动扫描article目录 - 保持原始逻辑
+        // 页面加载完成后自动扫描article目录
         document.addEventListener('DOMContentLoaded', function() {
             loadArticlesFromServer();
         });
