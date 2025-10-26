@@ -181,12 +181,11 @@
         
         .content-body {
             flex: 1;
-            padding: 20px;
+            padding: 30px;
             overflow-y: auto;
             background-color: var(--content-bg);
             display: flex;
             gap: 20px;
-            height: 100%;
         }
         
         .content-main {
@@ -196,12 +195,12 @@
         }
         
         .content-navigation {
-            width: 280px;
+            width: 250px;
             flex-shrink: 0;
             position: sticky;
-            top: 20px;
+            top: 30px;
             height: fit-content;
-            max-height: calc(100vh - 40px);
+            max-height: calc(100vh - 60px);
             overflow-y: auto;
             padding: 15px;
             background-color: var(--sidebar-bg);
@@ -316,7 +315,7 @@
     font-weight: 600;
     line-height: 1.25;
     color: #e6edf3;
-    scroll-margin-top: 20px;
+    scroll-margin-top: 30px;
 }
 
 #html-output h1 {
@@ -365,7 +364,7 @@
 #html-output pre {
     padding: 16px;
     overflow: auto;
-    font-size: 14px; /* 增大代码块字体 */
+    font-size: 14px;
     line-height: 1.45;
     background-color: #161b22;
     border-radius: 6px;
@@ -377,7 +376,7 @@
 #html-output code {
     padding: 0.2em 0.4em;
     margin: 0;
-    font-size: 14px; /* 增大行内代码字体 */
+    font-size: 14px;
     background-color: rgba(110, 118, 129, 0.4);
     border-radius: 6px;
     font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
@@ -468,7 +467,7 @@
 /* GitHub暗色风格的代码块高亮 */
 .hljs {
     background: transparent !important;
-    font-size: 14px !important; /* 确保语法高亮字体大小一致 */
+    font-size: 14px !important;
 }
 
 /* 任务列表 */
@@ -540,11 +539,11 @@
         @media (max-width: 1024px) {
             .content-body {
                 flex-direction: column;
-                gap: 15px;
             }
             
             .content-main {
-                margin-bottom: 0;
+                padding-right: 0;
+                margin-bottom: 20px;
             }
             
             .content-navigation {
@@ -591,7 +590,7 @@
             }
             
             .content-body {
-                padding: 15px;
+                padding: 20px;
             }
             
             /* 移动端菜单按钮更明显 */
@@ -723,13 +722,13 @@
         let activeFileId = null;
         let fileNames = []; // 存储所有文件名
 
-        // 预定义的文件名列表
+        // 预定义的文件名列表 - 保持原始逻辑
         const predefinedFiles = [
             '首页.md',
             'sql.md'
         ];
         
-        // 事件监听
+        // 事件监听 - 保持原始逻辑
         openSidebar.addEventListener('click', () => {
             sidebar.classList.add('open');
             sidebarOverlay.classList.add('open');
@@ -744,13 +743,13 @@
         });
         searchInput.addEventListener('input', filterFiles);
         
-        // 从URL参数获取要加载的文件名
+        // 从URL参数获取要加载的文件名 - 保持原始逻辑
         function getLoadFileFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get('load') || '';
         }
         
-        // 修复图片路径
+        // 修复图片路径 - 保持原始逻辑
         function fixImagePaths(html, fileName) {
             // 创建一个临时div来操作DOM
             const tempDiv = document.createElement('div');
@@ -778,7 +777,7 @@
             return tempDiv.innerHTML;
         }
         
-        // 生成文章导航
+        // 生成文章导航 - 保持原始逻辑
         function generateTOC() {
             const headings = htmlOutput.querySelectorAll('h1, h2');
             
@@ -839,7 +838,7 @@
             });
         }
         
-        // 加载单个文件内容
+        // 加载单个文件内容 - 保持原始逻辑
         async function loadFileContent(fileName, fileId) {
             try {
                 const fileUrl = `./article/${fileName}`;
@@ -871,7 +870,7 @@
             }
         }
         
-        // 从服务器加载文章列表
+        // 从服务器加载文章列表 - 保持原始逻辑
         async function loadArticlesFromServer() {
             try {
                 fileList.innerHTML = `
@@ -964,7 +963,7 @@
             }
         }
         
-        // 解析list.md文件内容，提取文件名
+        // 解析list.md文件内容，提取文件名 - 保持原始逻辑
         function parseListMD(content) {
             const files = [];
             const lines = content.split('\n');
@@ -985,12 +984,12 @@
             return files;
         }
         
-        // 移除.md扩展名
+        // 移除.md扩展名 - 保持原始逻辑
         function removeMDExtension(filename) {
             return filename.replace(/\.md$/, '');
         }
         
-        // 过滤文件列表
+        // 过滤文件列表 - 保持原始逻辑
         function filterFiles() {
             const searchTerm = searchInput.value.toLowerCase().trim();
             const fileItems = document.querySelectorAll('.file-item');
@@ -1021,7 +1020,7 @@
             }
         }
         
-        // 更新文件列表
+        // 更新文件列表 - 保持原始逻辑
         function updateFileList() {
             if (files.length === 0) {
                 fileList.innerHTML = `
@@ -1057,7 +1056,7 @@
             });
         }
         
-        // 渲染文件内容
+        // 渲染文件内容 - 保持原始逻辑，但移除标题栏相关代码
         async function renderFile(fileId) {
             const file = files.find(f => f.id === fileId);
             if (!file) return;
@@ -1103,7 +1102,7 @@
             updateFileList();
         }
         
-        // 格式化文件大小
+        // 格式化文件大小 - 保持原始逻辑
         function formatFileSize(bytes) {
             if (bytes === 0) return '0 Bytes';
             const k = 1024;
@@ -1112,7 +1111,7 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
         
-        // 显示通知
+        // 显示通知 - 保持原始逻辑
         function showNotification(message) {
             notificationText.textContent = message;
             notification.classList.add('show');
@@ -1122,7 +1121,7 @@
             }, 3000);
         }
         
-        // 页面加载完成后自动扫描article目录
+        // 页面加载完成后自动扫描article目录 - 保持原始逻辑
         document.addEventListener('DOMContentLoaded', function() {
             loadArticlesFromServer();
         });
