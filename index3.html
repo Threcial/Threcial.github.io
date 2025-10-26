@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threcial - 带导航的文章阅读器</title>
+    <title>Threcial</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -34,7 +34,6 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
-            overflow: hidden;
         }
         
         header {
@@ -45,7 +44,6 @@
             background-color: var(--content-bg);
             box-shadow: var(--shadow);
             z-index: 10;
-            border-bottom: 1px solid var(--border-color);
         }
         
         h1 {
@@ -176,35 +174,39 @@
             overflow: hidden;
         }
         
+        /* 移除内容标题栏 */
         .content-header {
-            padding: 15px 30px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: var(--content-bg);
+            display: none;
         }
         
         .content-body {
             flex: 1;
+            padding: 20px;
             overflow-y: auto;
             background-color: var(--content-bg);
             display: flex;
+            gap: 20px;
+            height: 100%;
         }
         
         .content-main {
             flex: 1;
-            padding: 30px;
-            overflow-y: auto;
+            min-width: 0; /* 防止内容溢出 */
+            overflow-x: hidden;
         }
         
         .content-navigation {
-            width: 250px;
+            width: 280px;
             flex-shrink: 0;
-            background-color: var(--sidebar-bg);
-            border-left: 1px solid var(--border-color);
-            padding: 20px;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+            max-height: calc(100vh - 40px);
             overflow-y: auto;
+            padding: 15px;
+            background-color: var(--sidebar-bg);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
         }
         
         .nav-title {
@@ -271,7 +273,6 @@
             height: 100%;
             text-align: center;
             color: var(--secondary-color);
-            padding: 20px;
         }
         
         .empty-state i {
@@ -290,192 +291,195 @@
             line-height: 1.6;
         }
 
-        /* GitHub暗色风格的Markdown渲染样式 */
-        #html-output {
-            line-height: 1.6;
-            color: #e6edf3;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            font-size: 16px;
-        }
+/* GitHub暗色风格的Markdown渲染样式 */
+#html-output {
+    line-height: 1.6;
+    color: #e6edf3;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
 
-        #html-output > *:first-child {
-            margin-top: 0 !important;
-        }
+#html-output > *:first-child {
+    margin-top: 0 !important;
+}
 
-        #html-output h1, 
-        #html-output h2, 
-        #html-output h3,
-        #html-output h4,
-        #html-output h5,
-        #html-output h6 {
-            margin-top: 24px;
-            margin-bottom: 16px;
-            font-weight: 600;
-            line-height: 1.25;
-            color: #e6edf3;
-            scroll-margin-top: 80px;
-        }
+#html-output h1, 
+#html-output h2, 
+#html-output h3,
+#html-output h4,
+#html-output h5,
+#html-output h6 {
+    margin-top: 24px;
+    margin-bottom: 16px;
+    font-weight: 600;
+    line-height: 1.25;
+    color: #e6edf3;
+    scroll-margin-top: 20px;
+}
 
-        #html-output h1 {
-            padding-bottom: 0.3em;
-            font-size: 2em;
-            border-bottom: 1px solid #30363d;
-        }
+#html-output h1 {
+    padding-bottom: 0.3em;
+    font-size: 2em;
+    border-bottom: 1px solid #30363d;
+}
 
-        #html-output h2 {
-            padding-bottom: 0.3em;
-            font-size: 1.5em;
-            border-bottom: 1px solid #30363d;
-        }
+#html-output h2 {
+    padding-bottom: 0.3em;
+    font-size: 1.5em;
+    border-bottom: 1px solid #30363d;
+}
 
-        #html-output h3 {
-            font-size: 1.25em;
-        }
+#html-output h3 {
+    font-size: 1.25em;
+}
 
-        #html-output h4 {
-            font-size: 1em;
-        }
+#html-output h4 {
+    font-size: 1em;
+}
 
-        #html-output h5 {
-            font-size: 0.875em;
-        }
+#html-output h5 {
+    font-size: 0.875em;
+}
 
-        #html-output h6 {
-            font-size: 0.85em;
-            color: #7d8590;
-        }
+#html-output h6 {
+    font-size: 0.85em;
+    color: #7d8590;
+}
 
-        #html-output p {
-            margin-top: 0;
-            margin-bottom: 16px;
-            color: #e6edf3;
-        }
+#html-output p {
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: #e6edf3;
+}
 
-        #html-output blockquote {
-            padding: 0 1em;
-            color: #7d8590;
-            border-left: 0.25em solid #30363d;
-            margin: 0 0 16px 0;
-            background-color: rgba(110, 118, 129, 0.1);
-        }
+#html-output blockquote {
+    padding: 0 1em;
+    color: #7d8590;
+    border-left: 0.25em solid #30363d;
+    margin: 0 0 16px 0;
+    background-color: rgba(110, 118, 129, 0.1);
+}
 
-        #html-output pre {
-            padding: 16px;
-            overflow: auto;
-            font-size: 14px;
-            line-height: 1.45;
-            background-color: #161b22;
-            border-radius: 6px;
-            margin: 0 0 16px 0;
-            border: 1px solid #30363d;
-        }
+#html-output pre {
+    padding: 16px;
+    overflow: auto;
+    font-size: 14px; /* 增大代码块字体 */
+    line-height: 1.45;
+    background-color: #161b22;
+    border-radius: 6px;
+    margin: 0 0 16px 0;
+    border: 1px solid #30363d;
+    max-width: 100%;
+}
 
-        #html-output code {
-            padding: 0.2em 0.4em;
-            margin: 0;
-            font-size: 14px;
-            background-color: rgba(110, 118, 129, 0.4);
-            border-radius: 6px;
-            font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
-            color: #e6edf3;
-        }
+#html-output code {
+    padding: 0.2em 0.4em;
+    margin: 0;
+    font-size: 14px; /* 增大行内代码字体 */
+    background-color: rgba(110, 118, 129, 0.4);
+    border-radius: 6px;
+    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+    color: #e6edf3;
+}
 
-        #html-output pre code {
-            padding: 0;
-            margin: 0;
-            background-color: transparent;
-            border: 0;
-            font-size: 14px;
-            color: #e6edf3;
-        }
+#html-output pre code {
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    border: 0;
+    font-size: 14px;
+    color: #e6edf3;
+}
 
-        #html-output table {
-            border-spacing: 0;
-            border-collapse: collapse;
-            display: block;
-            width: max-content;
-            max-width: 100%;
-            overflow: auto;
-            margin: 0 0 16px 0;
-        }
+#html-output table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    overflow: auto;
+    margin: 0 0 16px 0;
+}
 
-        #html-output tr {
-            background-color: #0d1117;
-            border-top: 1px solid #30363d;
-        }
+#html-output tr {
+    background-color: #0d1117;
+    border-top: 1px solid #30363d;
+}
 
-        #html-output tr:nth-child(2n) {
-            background-color: #161b22;
-        }
+#html-output tr:nth-child(2n) {
+    background-color: #161b22;
+}
 
-        #html-output th, 
-        #html-output td {
-            padding: 6px 13px;
-            border: 1px solid #30363d;
-            color: #e6edf3;
-        }
+#html-output th, 
+#html-output td {
+    padding: 6px 13px;
+    border: 1px solid #30363d;
+    color: #e6edf3;
+}
 
-        #html-output th {
-            font-weight: 600;
-            background-color: #161b22;
-        }
+#html-output th {
+    font-weight: 600;
+    background-color: #161b22;
+}
 
-        #html-output ul, 
-        #html-output ol {
-            padding-left: 2em;
-            margin-top: 0;
-            margin-bottom: 16px;
-        }
+#html-output ul, 
+#html-output ol {
+    padding-left: 2em;
+    margin-top: 0;
+    margin-bottom: 16px;
+}
 
-        #html-output li {
-            word-wrap: break-all;
-            color: #e6edf3;
-        }
+#html-output li {
+    word-wrap: break-all;
+    color: #e6edf3;
+}
 
-        #html-output li + li {
-            margin-top: 0.25em;
-        }
+#html-output li + li {
+    margin-top: 0.25em;
+}
 
-        #html-output img {
-            max-width: 100%;
-            box-sizing: content-box;
-            background-color: #0d1117;
-            margin: 0 0 16px 0;
-        }
+#html-output img {
+    max-width: 100%;
+    box-sizing: content-box;
+    background-color: #0d1117;
+    margin: 0 0 16px 0;
+}
 
-        #html-output hr {
-            height: 0.25em;
-            padding: 0;
-            margin: 24px 0;
-            background-color: #30363d;
-            border: 0;
-            border-radius: 1px;
-        }
+#html-output hr {
+    height: 0.25em;
+    padding: 0;
+    margin: 24px 0;
+    background-color: #30363d;
+    border: 0;
+    border-radius: 1px;
+}
 
-        #html-output a {
-            color: #2f81f7;
-            text-decoration: none;
-        }
+#html-output a {
+    color: #2f81f7;
+    text-decoration: none;
+}
 
-        #html-output a:hover {
-            text-decoration: underline;
-        }
+#html-output a:hover {
+    text-decoration: underline;
+}
 
-        /* GitHub暗色风格的代码块高亮 */
-        .hljs {
-            background: transparent !important;
-            font-size: 14px !important;
-        }
+/* GitHub暗色风格的代码块高亮 */
+.hljs {
+    background: transparent !important;
+    font-size: 14px !important; /* 确保语法高亮字体大小一致 */
+}
 
-        /* 任务列表 */
-        #html-output .task-list-item {
-            list-style-type: none;
-        }
+/* 任务列表 */
+#html-output .task-list-item {
+    list-style-type: none;
+}
 
-        #html-output .task-list-item-checkbox {
-            margin: 0 0.2em 0.25em -1.6em;
-            vertical-align: middle;
-        }      
+#html-output .task-list-item-checkbox {
+    margin: 0 0.2em 0.25em -1.6em;
+    vertical-align: middle;
+}      
         
         .file-input {
             display: none;
@@ -536,11 +540,11 @@
         @media (max-width: 1024px) {
             .content-body {
                 flex-direction: column;
+                gap: 15px;
             }
             
             .content-main {
-                padding-right: 0;
-                margin-bottom: 20px;
+                margin-bottom: 0;
             }
             
             .content-navigation {
@@ -586,12 +590,8 @@
                 display: flex;
             }
             
-            .content-header {
-                padding: 15px 20px;
-            }
-            
             .content-body {
-                padding: 20px;
+                padding: 15px;
             }
             
             /* 移动端菜单按钮更明显 */
@@ -658,16 +658,7 @@
         </div>
         
         <div class="content">
-            <div class="content-header">
-                <button class="menu-toggle" id="open-sidebar">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div>
-                    <h2 id="current-file">选择文章开始浏览</h2>
-                    <div class="mobile-hint">点击上方按钮打开文章列表</div>
-                </div>
-                <div class="file-info" id="file-info"></div>
-            </div>
+            <!-- 已移除内容标题栏 -->
             <div class="content-body">
                 <div class="content-main">
                     <div id="html-output">
@@ -730,14 +721,12 @@
         // 存储加载的文件
         let files = [];
         let activeFileId = null;
+        let fileNames = []; // 存储所有文件名
 
         // 预定义的文件名列表
         const predefinedFiles = [
             '首页.md',
-            'sql.md',
-            'javascript.md',
-            'python.md',
-            'git.md'
+            'sql.md'
         ];
         
         // 事件监听
@@ -754,6 +743,40 @@
             sidebarOverlay.classList.remove('open');
         });
         searchInput.addEventListener('input', filterFiles);
+        
+        // 从URL参数获取要加载的文件名
+        function getLoadFileFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('load') || '';
+        }
+        
+        // 修复图片路径
+        function fixImagePaths(html, fileName) {
+            // 创建一个临时div来操作DOM
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            
+            // 找到所有的图片元素
+            const images = tempDiv.querySelectorAll('img');
+            
+            images.forEach(img => {
+                let src = img.getAttribute('src');
+                
+                // 如果图片路径以 ./imgs/ 开头，修正为正确的路径
+                if (src && src.startsWith('./imgs/')) {
+                    // 在线环境使用相对于根目录的路径
+                    const correctedSrc = `/article/imgs/${src.replace('./imgs/', '')}`;
+                    img.setAttribute('src', correctedSrc);
+                }
+                // 处理其他可能的相对路径情况
+                else if (src && (src.startsWith('imgs/') || src.startsWith('../imgs/'))) {
+                    const correctedSrc = `/article/imgs/${src.split('/').pop()}`;
+                    img.setAttribute('src', correctedSrc);
+                }
+            });
+            
+            return tempDiv.innerHTML;
+        }
         
         // 生成文章导航
         function generateTOC() {
@@ -804,6 +827,13 @@
                             behavior: 'smooth',
                             block: 'start'
                         });
+                        
+                        // 移动端点击导航后关闭导航栏
+                        if (window.innerWidth <= 1024) {
+                            document.querySelector('.content-navigation').scrollIntoView({
+                                behavior: 'smooth'
+                            });
+                        }
                     }
                 });
             });
@@ -812,18 +842,22 @@
         // 加载单个文件内容
         async function loadFileContent(fileName, fileId) {
             try {
-                // 模拟从服务器加载文件
-                // 在实际应用中，这里应该是从服务器获取文件内容的API调用
-                const mockContent = getMockContent(fileName);
+                const fileUrl = `./article/${fileName}`;
+                const response = await fetch(fileUrl);
                 
-                return {
-                    id: fileId,
-                    name: fileName,
-                    displayName: removeMDExtension(fileName),
-                    content: mockContent,
-                    url: `./article/${fileName}`,
-                    loaded: true
-                };
+                if (response.ok) {
+                    const content = await response.text();
+                    return {
+                        id: fileId,
+                        name: fileName,
+                        displayName: removeMDExtension(fileName),
+                        content: content,
+                        url: fileUrl,
+                        loaded: true
+                    };
+                } else {
+                    throw new Error(`无法加载文件: ${fileName}`);
+                }
             } catch (error) {
                 console.error(`加载文件 ${fileName} 失败:`, error);
                 return {
@@ -834,281 +868,6 @@
                     url: `./article/${fileName}`,
                     loaded: false
                 };
-            }
-        }
-        
-        // 模拟文件内容
-        function getMockContent(fileName) {
-            if (fileName === '首页.md') {
-                return `# Threcial 文档中心
-
-欢迎来到 Threcial 文档中心！这里汇集了各种技术文档和教程。
-
-## 快速开始
-
-Threcial 是一个强大的文档管理和阅读工具，支持 Markdown 格式。
-
-### 主要功能
-
-- 支持 Markdown 渲染
-- 代码语法高亮
-- 文章内导航
-- 响应式设计
-
-## 如何使用
-
-1. 从左侧选择文章
-2. 使用右侧导航快速定位内容
-3. 享受阅读体验
-
-## 支持的语言
-
-- JavaScript
-- Python
-- SQL
-- Git
-- 等等
-
----
-*最后更新: 2023年10月*`;
-            } else if (fileName === 'sql.md') {
-                return `# SQL 教程
-
-SQL（Structured Query Language）是用于管理关系数据库的标准语言。
-
-## 基础语法
-
-### SELECT 语句
-
-\`\`\`sql
-SELECT column1, column2, ...
-FROM table_name
-WHERE condition;
-\`\`\`
-
-### INSERT 语句
-
-\`\`\`sql
-INSERT INTO table_name (column1, column2, ...)
-VALUES (value1, value2, ...);
-\`\`\`
-
-## 高级功能
-
-### 连接查询
-
-\`\`\`sql
-SELECT Orders.OrderID, Customers.CustomerName
-FROM Orders
-INNER JOIN Customers ON Orders.CustomerID = Customers.CustomerID;
-\`\`\`
-
-### 子查询
-
-\`\`\`sql
-SELECT column_name(s)
-FROM table_name
-WHERE column_name operator
-  (SELECT column_name FROM table_name WHERE condition);
-\`\`\`
-
-## 性能优化
-
-- 使用索引
-- 避免 SELECT *
-- 合理使用 JOIN`;
-            } else if (fileName === 'javascript.md') {
-                return `# JavaScript 教程
-
-JavaScript 是一种高级的、解释型的编程语言。
-
-## 变量声明
-
-\`\`\`javascript
-// ES6 之前
-var name = "John";
-
-// ES6 之后
-let age = 30;
-const PI = 3.14;
-\`\`\`
-
-## 函数
-
-### 函数声明
-
-\`\`\`javascript
-function greet(name) {
-    return "Hello, " + name + "!";
-}
-\`\`\`
-
-### 箭头函数
-
-\`\`\`javascript
-const greet = (name) => {
-    return "Hello, " + name + "!";
-};
-\`\`\`
-
-## 异步编程
-
-### Promise
-
-\`\`\`javascript
-fetch('https://api.example.com/data')
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.error('Error:', error));
-\`\`\`
-
-### Async/Await
-
-\`\`\`javascript
-async function fetchData() {
-  try {
-    const response = await fetch('https://api.example.com/data');
-    const data = await response.json();
-    console.log(data);
-  } catch (error) {
-    console.error('Error:', error);
-  }
-}
-\`\`\``;
-            } else if (fileName === 'python.md') {
-                return `# Python 教程
-
-Python 是一种解释型、高级、通用的编程语言。
-
-## 基础语法
-
-### 变量和数据类型
-
-\`\`\`python
-# 字符串
-name = "Alice"
-
-# 数字
-age = 25
-
-# 列表
-fruits = ["apple", "banana", "cherry"]
-
-# 字典
-person = {"name": "Bob", "age": 30}
-\`\`\`
-
-## 函数
-
-### 函数定义
-
-\`\`\`python
-def greet(name):
-    return f"Hello, {name}!"
-\`\`\`
-
-### Lambda 函数
-
-\`\`\`python
-square = lambda x: x * x
-\`\`\`
-
-## 面向对象编程
-
-### 类定义
-
-\`\`\`python
-class Person:
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
-    
-    def greet(self):
-        return f"Hello, my name is {self.name}"
-\`\`\``;
-            } else if (fileName === 'git.md') {
-                return `# Git 教程
-
-Git 是一个分布式版本控制系统。
-
-## 基础命令
-
-### 初始化仓库
-
-\`\`\`bash
-git init
-\`\`\`
-
-### 添加文件
-
-\`\`\`bash
-git add filename
-git add .
-\`\`\`
-
-### 提交更改
-
-\`\`\`bash
-git commit -m "Commit message"
-\`\`\`
-
-## 分支管理
-
-### 创建分支
-
-\`\`\`bash
-git branch branch_name
-\`\`\`
-
-### 切换分支
-
-\`\`\`bash
-git checkout branch_name
-\`\`\`
-
-### 合并分支
-
-\`\`\`bash
-git merge branch_name
-\`\`\`
-
-## 远程仓库
-
-### 添加远程仓库
-
-\`\`\`bash
-git remote add origin https://github.com/user/repo.git
-\`\`\`
-
-### 推送更改
-
-\`\`\`bash
-git push origin main
-\`\`\``;
-            } else {
-                return `# ${removeMDExtension(fileName)}
-
-这是 ${removeMDExtension(fileName)} 文章的示例内容。
-
-## 第一部分
-
-这是第一部分的内容。
-
-### 子章节
-
-这是子章节的内容。
-
-## 第二部分
-
-这是第二部分的内容。
-
-### 另一个子章节
-
-这是另一个子章节的内容。
-
-## 总结
-
-这是文章的总结部分。`;
             }
         }
         
@@ -1124,9 +883,23 @@ git push origin main
                 `;
                 
                 files = [];
+                fileNames = [];
                 
-                // 使用预定义文件列表
-                const fileNames = [...predefinedFiles];
+                // 首先尝试加载list.md文件来获取文件列表
+                try {
+                    const listResponse = await fetch('./article/list.md');
+                    if (listResponse.ok) {
+                        const listContent = await listResponse.text();
+                        fileNames = parseListMD(listContent);
+                    }
+                } catch (error) {
+                    console.log('list.md文件不存在，使用预定义文件列表');
+                }
+                
+                // 如果list.md中没有文件列表，使用预定义文件列表
+                if (fileNames.length === 0) {
+                    fileNames = [...predefinedFiles];
+                }
                 
                 // 确保首页.md在第一位
                 fileNames.sort((a, b) => {
@@ -1148,8 +921,23 @@ git push origin main
                 // 更新文件列表（显示所有文件）
                 updateFileList();
                 
-                // 加载第一个文件内容
-                const fileToLoad = files[0];
+                // 检查URL参数中是否有要加载的文件
+                const loadFile = getLoadFileFromURL();
+                let fileToLoad = files[0]; // 默认加载第一个文件（首页.md）
+                
+                if (loadFile) {
+                    // 查找URL参数指定的文件
+                    const targetFile = files.find(file => 
+                        file.name === loadFile || 
+                        file.name === `${loadFile}.md` || 
+                        file.displayName === loadFile
+                    );
+                    if (targetFile) {
+                        fileToLoad = targetFile;
+                    }
+                }
+                
+                // 只加载选定的文件内容
                 const loadedFile = await loadFileContent(fileToLoad.name, fileToLoad.id);
                 
                 // 更新文件列表中的对应文件
@@ -1174,6 +962,27 @@ git push origin main
                 `;
                 showNotification('加载文章失败: ' + error.message);
             }
+        }
+        
+        // 解析list.md文件内容，提取文件名
+        function parseListMD(content) {
+            const files = [];
+            const lines = content.split('\n');
+            
+            for (const line of lines) {
+                // 匹配Markdown链接格式 [显示文本](文件名.md)
+                const linkMatch = line.match(/\[.*?\]\((.*?\.md)\)/);
+                if (linkMatch && linkMatch[1]) {
+                    files.push(linkMatch[1]);
+                }
+                // 匹配简单的文件名（以.md结尾的行）
+                const fileMatch = line.match(/^\s*(\S+\.md)\s*$/);
+                if (fileMatch && fileMatch[1] && !files.includes(fileMatch[1])) {
+                    files.push(fileMatch[1]);
+                }
+            }
+            
+            return files;
         }
         
         // 移除.md扩展名
@@ -1278,17 +1087,12 @@ git push origin main
             if (!updatedFile) return;
             
             activeFileId = fileId;
-            currentFileEl.textContent = updatedFile.displayName;
-            
-            // 更新文件信息
-            const fileSize = new Blob([updatedFile.content]).size;
-            const formattedSize = formatFileSize(fileSize);
-            fileInfo.innerHTML = `
-                <span>${formattedSize}</span>
-            `;
             
             // 渲染Markdown
             let html = marked.parse(updatedFile.content);
+            
+            // 修复图片路径
+            html = fixImagePaths(html, updatedFile.name);
             
             htmlOutput.innerHTML = html;
             
