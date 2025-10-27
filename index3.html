@@ -185,16 +185,37 @@
         .content-body {
             flex: 1;
             padding: 30px;
-            overflow-y: auto; /* 将滚动条放在屏幕最右侧 */
             background-color: var(--content-bg);
             display: flex;
             gap: 20px;
+            overflow: hidden; /* 防止内容区域滚动 */
         }
         
         .content-main {
             flex: 1;
             min-width: 0; /* 防止内容溢出 */
             overflow-x: hidden;
+            overflow-y: auto; /* 文章内容有自己的滚动条 */
+            padding-right: 10px; /* 为滚动条留出空间 */
+        }
+        
+        /* 自定义滚动条样式 */
+        .content-main::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .content-main::-webkit-scrollbar-track {
+            background: var(--sidebar-bg);
+            border-radius: 4px;
+        }
+        
+        .content-main::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+        
+        .content-main::-webkit-scrollbar-thumb:hover {
+            background: #1f6feb;
         }
         
         .content-navigation {
@@ -202,8 +223,8 @@
             flex-shrink: 0;
             position: sticky;
             top: 30px;
-            height: fit-content;
-            max-height: calc(100vh - 60px);
+            height: calc(100vh - 120px); /* 固定高度，不随内容滚动 */
+            max-height: calc(100vh - 120px);
             overflow-y: auto; /* 允许导航栏内部滚动 */
             padding: 15px;
             background-color: var(--sidebar-bg);
@@ -546,19 +567,6 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        
-        /* 移除所有移动端适配样式 */
-        .menu-toggle {
-            display: none;
-        }
-        
-        .sidebar-overlay {
-            display: none;
-        }
-        
-        .mobile-hint {
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -570,9 +578,7 @@
     </header>
     
     <div class="container">
-        <div class="sidebar-overlay" id="sidebar-overlay"></div>
-        
-        <div class="sidebar" id="sidebar">
+        <div class="sidebar">
             <div class="sidebar-header">
                 <h2>文章列表</h2>
             </div>
