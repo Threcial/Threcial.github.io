@@ -1,0 +1,103 @@
+/* ==========================================================================
+   Threcial's Blog — Butterfly 主题自定义样式
+   在 _config.butterfly.yml 的 inject.head 里通过 <link> 引入
+   ========================================================================== */
+
+/* ---------------------------------------------------------------- 顶部图 */
+/* 首页顶部图：整屏高度 + 背景固定（滚动时图片不动）
+   【2026-09-24 变更】文章页改用 front-matter `top_img: false` ——
+   顶部只留 60px 导航条（主题的 .not-top-img，背景透明），标题由主题
+   挪进正文卡片内（post-info.pug）。所以这里不再有文章页的 post-bg 规则。 */
+#page-header.full_page {
+    height: 100vh;
+    background-attachment: fixed;
+}
+
+/* iOS Safari / 部分移动浏览器不支持 background-attachment: fixed
+   （背景会被放大错位），触屏设备回退为随页面滚动 */
+@media (hover: none) and (pointer: coarse) {
+    #page-header.full_page {
+        background-attachment: scroll;
+    }
+}
+
+/* 仍带头图的页面（首页/归档/分类/标签）底部遮罩：底部加深，与正文衔接更自然
+   文章页已无头图，这条自动不作用于文章页（.not-top-img 被排除） */
+#page-header:not(.not-top-img):before {
+    background: linear-gradient(to bottom,
+        rgba(0, 0, 0, 0.28) 0%,
+        rgba(0, 0, 0, 0.10) 42%,
+        rgba(0, 0, 0, 0.62) 100%);
+}
+
+/* ---------------------------------------------------------------- 主题色 */
+/* 贴近原站 Sakurairo 的配色：深灰 + 浅蓝 */
+:root {
+    --theme-color: #6f9dc9;
+    --btn-bg: #6f9dc9;
+    --btn-hover-color: #505050;
+    --text-bg-hover: #6f9dc9;
+    --light-blue: #6f9dc9;
+}
+[data-theme="dark"] {
+    --theme-color: #7fb0dc;
+    --btn-bg: #7fb0dc;
+    --btn-hover-color: #294aa4;
+    --text-bg-hover: #7fb0dc;
+    --light-blue: #7fb0dc;
+}
+
+/* ---------------------------------------------------------------- 排版 */
+#article-container {
+    font-size: 16px;
+    line-height: 1.85;
+}
+#article-container h2 {
+    border-bottom-color: #6f9dc9;
+}
+#article-container h3::after {
+    background: #6f9dc9;
+}
+#article-container a {
+    border-bottom: 1px solid transparent;
+}
+#article-container a:hover {
+    border-bottom-color: currentColor;
+}
+
+/* 正文里的图片：圆角 */
+#article-container img {
+    border-radius: 6px;
+}
+
+/* ---------------------------------------------------------------- 卡片 */
+/* 【全页背景图透出】--card-bg 是主题所有卡片的统一底色来源：
+   首页文章卡、正文卡、侧栏小部件、归档页、分页按钮都 @extend .cardHover，
+   而 .cardHover 的定义（_global/function.styl:27）就是 background: var(--card-bg)。
+   所以改这一个变量，全站卡片一起变半透明 —— 配合 _config.butterfly.yml 的
+   `background:`（铺满整页的背景图），就是「文字浮在图上」的效果。
+   透明度 0.6：数值越低越透、背景越明显，但文字越难读。
+   深色模式必须单独给一套 —— 主题在 darkmode.styl 里把 --card-bg 定为 #121212。 */
+:root {
+    --card-bg: rgba(255, 255, 255, 0.6);
+}
+[data-theme="dark"] {
+    --card-bg: rgba(18, 18, 18, 0.6);
+}
+
+#recent-posts > .recent-post-item {
+    border-radius: 10px;
+}
+#recent-posts > .recent-post-item:hover {
+    box-shadow: 0 1px 20px 8px rgba(232, 232, 232, 0.75);
+}
+
+/* ---------------------------------------------------------------- 其他 */
+/* 归档页年份标题 */
+#archive-page .archive-year-wrap {
+    font-weight: 400;
+}
+/* 页脚 */
+#footer {
+    font-size: 14px;
+}

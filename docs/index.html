@@ -1,0 +1,332 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Threcial</title><meta name="author" content="Threcial"><meta name="copyright" content="Threcial"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Threcial 的技术笔记？">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Threcial">
+<meta property="og:url" content="https://threcial.github.io/index.html">
+<meta property="og:site_name" content="Threcial">
+<meta property="og:description" content="Threcial 的技术笔记？">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://threcial.github.io/img/avatar.svg">
+<meta property="article:author" content="Threcial">
+<meta property="article:tag" content="Linux,计算机网络,网络安全,运维,数据库,Nginx">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://threcial.github.io/img/avatar.svg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Threcial",
+  "alternateName": [
+    "threcial.github.io"
+  ],
+  "url": "https://threcial.github.io/"
+}</script><link rel="shortcut icon" href="/img/favicon.svg"><link rel="canonical" href="https://threcial.github.io/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.7.1.260810"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        try {
+          const data = { value }
+
+          if (ttl != null) {
+            data.expiry = Date.now() + ttl * 86400000
+          }
+
+          localStorage.setItem(key, JSON.stringify(data))
+        } catch (e) {
+          console.error(e)
+        }
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Threcial',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'home'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="Threcial" type="application/atom+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/covers/cover-056.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.svg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">63</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">60</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page fixed" id="page-header" style="background-image: url(/img/covers/cover-012.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Threcial</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="site-info"><h1 id="site-title">Threcial</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/Threcial" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fas fa-rss" style="color: #f26522;"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="post_cover left"><a href="/linux/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%AE%B0%E5%BD%95/" title="网站性能优化记录"><img class="post-bg" src="/img/covers/cover-060.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="网站性能优化记录"></a></div><div class="recent-post-info"><a class="article-title" href="/linux/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%AE%B0%E5%BD%95/" title="网站性能优化记录">网站性能优化记录</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-07-03T07:51:56.000Z" title="发表于 2026-07-03 15:51:56">2026-07-03</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/linux/">linux</a></span></div><div class="content">服务器环境：Linux、Nginx、PHP、WordPress、Sakurairo 主题服务器类型：轻量应用服务器优化目标：提高网站访问速度、降低资源占用、增强基础安全防护、减少异常访问对服务器的影响。  1. Linux 系统层优化1.1 增加 Swap 交换空间服务器为轻量应用服务器，默认未配置 Swap。在内存较小的情况下，PHP、MySQL、Nginx 或 WordPress 后台任务可能会导致内存瞬间升高，严重时触发 OOM，导致服务异常退出。 12345free -hdd if=/dev/zero of=/swapfile bs=1M count=2048chmod 600 /swapfilemkswap /swapfileswapon /swapfile  设置开机自动挂载 1echo &#x27;/swapfile none swap sw 0 0&#x27; &gt;&gt; /etc/fstab  调整 Swap 使用优先级 12echo &#x27;vm.swappiness = 60&#x27; &gt;&gt; /etc/sysctl.confsysct...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/docker/docker%E5%9F%BA%E7%A1%80/" title="Docker基础"><img class="post-bg" src="/img/covers/cover-001.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Docker基础"></a></div><div class="recent-post-info"><a class="article-title" href="/docker/docker%E5%9F%BA%E7%A1%80/" title="Docker基础">Docker基础</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-06-15T07:10:25.000Z" title="发表于 2026-06-15 15:10:25">2026-06-15</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/docker/">docker</a></span></div><div class="content">Docker 把应用和运行环境打包成镜像，再把镜像运行成容器 镜像是静态模板，容器是运行中的进程 Docker 与虚拟机   对比项 容器 虚拟机    内核 共享宿主机内核 每台虚拟机有完整系统内核   启动速度 秒级或更快 通常分钟级   资源占用 较低 较高   隔离层次 操作系统进程级隔离 硬件虚拟化隔离   适用场景 应用交付、环境一致性、弹性部署 强隔离、多系统运行   Docker 的核心收益是环境一致、迁移方便、启动快、资源利用率高。与其说是“小型虚拟机”，不如说是“带隔离环境的进程” 安装 DockerCentOS 7 安装示例： 1234yum remove -y docker*yum install -y yum-utilsyum-config-manager --add-repo http://mirrors.aliyun.com/dockerce/linux/centos/docker-ce.repoyum install -y docker-ce docker-ce-cli containerd.io  镜像操作1234567891011docker ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E4%B8%8E%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="MySQL 备份恢复与主从复制"><img class="post-bg" src="/img/covers/cover-002.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL 备份恢复与主从复制"></a></div><div class="recent-post-info"><a class="article-title" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E4%B8%8E%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="MySQL 备份恢复与主从复制">MySQL 备份恢复与主从复制</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-06-07T02:22:41.000Z" title="发表于 2026-06-07 10:22:41">2026-06-07</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></span></div><div class="content">MySQL 备份方式可以分类 按备份方式分： 12逻辑备份：导出 SQL 语句，比如 mysqldump物理备份：直接备份数据文件，比如 xtrabackup  按备份范围分： 12全量备份：某个时间点完整导出一份数据增量备份：只记录全量备份之后发生的变化  本文主要讲逻辑备份，主从复制也是基于逻辑备份 mysqldump：全量备份1mysqldump -u root -p --single-transaction --master-data=2 -B rocky &gt;rocky.sql  --single-transaction 会在备份开始时开启一个事务，这样可以保证备份一致性。-x 会使用锁死表的方式来保证一致性，但这样会导致前端业务卡住，所以不推荐使用 -x --master-data=2 会在备份文件里以注释的方式记录 binlog 的位置，便于恢复时使用 -B 会将后面所有参数视为库，否则只有第一参数为库，后面的参数都为表 binlog：增量备份mysqldump 只能恢复到备份那个时间点，如果凌晨 2 点做了全量备份，下午 5 点误删数据，那么只靠凌晨 2 点的...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E3%80%81%E8%A7%A6%E5%8F%91%E5%99%A8%E3%80%81%E7%B4%A2%E5%BC%95/" title="MySQL 常用函数、触发器、索引"><img class="post-bg" src="/img/covers/cover-003.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL 常用函数、触发器、索引"></a></div><div class="recent-post-info"><a class="article-title" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E3%80%81%E8%A7%A6%E5%8F%91%E5%99%A8%E3%80%81%E7%B4%A2%E5%BC%95/" title="MySQL 常用函数、触发器、索引">MySQL 常用函数、触发器、索引</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-06-06T12:40:56.000Z" title="发表于 2026-06-06 20:40:56">2026-06-06</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></span></div><div class="content">触发器：在 insert/update/delete 前后自动执行动作索引：减少扫描范围，提高查询效率 常用函数聚合函数 12345COUNT(col)   统计查询结果的行数MIN(col)   查询指定列的最小值MAX(col)   查询指定列的最大值SUM(col)   求和，返回指定列的总和AVG(col)   求平均值，返回指定列数据的平均值  数值型函数 数值型函数主要是对数值型数据进行处理 1234567891011121314ABS(x)                 返回x的绝对值BIN(x)                返回x的二进制CEILING(x)            返回大于x的最小整数值EXP(x)                返回值e（自然对数的底）的x次方FLOOR(x)                返回小于x的最大整数值GREATEST(x1,x2,...,xn)   返回集合中最大的值LEAST(x1,x2,...,xn)   返回集合中最小的值LN(x)                 返回x的自然对数LOG(x,y)      ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E4%BA%8B%E5%8A%A1%E3%80%81%E8%A7%86%E5%9B%BE%E3%80%81%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" title="MySQL 事务、视图、存储过程"><img class="post-bg" src="/img/covers/cover-049.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL 事务、视图、存储过程"></a></div><div class="recent-post-info"><a class="article-title" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E4%BA%8B%E5%8A%A1%E3%80%81%E8%A7%86%E5%9B%BE%E3%80%81%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" title="MySQL 事务、视图、存储过程">MySQL 事务、视图、存储过程</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-06-06T12:14:32.000Z" title="发表于 2026-06-06 20:14:32">2026-06-06</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></span></div><div class="content">**事务：**保证一组数据修改要么都成功，要么都失败 视图：把复杂查询封装成一张虚拟表存储过程&#x2F;函数：把 SQL 逻辑封装在数据库里 事务：把一组修改当成一个整体事务最容易理解的场景就是转账，比如李四给张三转 500 元，表面上是两条 UPDATE： 12UPDATE account SET money = money - 500 WHERE name = &#x27;李四&#x27;;UPDATE account SET money = money + 500 WHERE name = &#x27;张三&#x27;;  如果第一条执行成功，第二条还没执行时程序崩了，就会出现李四少了 500，张三没收到 500 的情况 事务要解决的就是这种“中间状态不能留下来”的问题 不加事务时，第二步出错会留下错误数据，加事务后，异常时可以回滚 事务写法： 1234BEGIN;UPDATE account SET money = money - 500 WHERE name = &#x27;李四&#x27;;UPDATE account SET money = money + 500...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/%E6%95%B0%E6%8D%AE%E5%BA%93/%E5%9F%BA%E7%A1%80sql%E8%AF%AD%E5%8F%A5-%E4%B8%8B/" title="基础SQL语句 下"><img class="post-bg" src="/img/covers/cover-056.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基础SQL语句 下"></a></div><div class="recent-post-info"><a class="article-title" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/%E5%9F%BA%E7%A1%80sql%E8%AF%AD%E5%8F%A5-%E4%B8%8B/" title="基础SQL语句 下">基础SQL语句 下</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-06-06T11:35:25.000Z" title="发表于 2026-06-06 19:35:25">2026-06-06</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></span></div><div class="content">管理数据变化数据变化主要是三件事：插入、修改、删除 插入数据：INSERT 指定字段插入： 1INSERT INTO stu(id, name) VALUES(1, &#x27;张三&#x27;);  批量插入： 1234INSERT INTO stu(id, name, gender) VALUES(2, &#x27;李四1&#x27;, &#x27;男&#x27;),(3, &#x27;李四2&#x27;, &#x27;男&#x27;),(4, &#x27;李四3&#x27;, &#x27;男&#x27;);  给所有字段插入时，可以省略字段列表： 12INSERT INTO stu VALUES(2, &#x27;李四&#x27;, &#x27;男&#x27;, &#x27;1999-11-11&#x27;, 88.88, &#x27;lisi@example.com&#x27;, &#x27;13888888888&#x27;, 1);  但实际使用时，推荐保留字段列表，因为表结构有可能发生改变，如果省略字段列表，一旦字段顺序或字段数量变化，旧 SQL 语句将失效 修改数...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/%E6%95%B0%E6%8D%AE%E5%BA%93/%E5%9F%BA%E7%A1%80sql%E8%AF%AD%E5%8F%A5-%E4%B8%8A/" title="基础SQL语句 上"><img class="post-bg" src="/img/covers/cover-004.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基础SQL语句 上"></a></div><div class="recent-post-info"><a class="article-title" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/%E5%9F%BA%E7%A1%80sql%E8%AF%AD%E5%8F%A5-%E4%B8%8A/" title="基础SQL语句 上">基础SQL语句 上</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-06-05T12:46:01.000Z" title="发表于 2026-06-05 20:46:01">2026-06-05</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></span></div><div class="content">概念SQL 全称是 Structured Query Language，结构化查询语言，SQL 大致可以分成几类： 1234DDL：Data Definition Language    数据定义语言DML：Data Manipulation Language  数据操作语言DQL：Data Query Language         数据查询语言DCL：Data Control Language       数据控制语言  因为大部分时候在操作表，为了便于记忆，可以不严谨地分为下面三种语句 123管理表结构或库结构管理表数据变化管理表数据查询            SQL 可以单行写，也可以多行写，但一条语句结束要加分号。MySQL 关键字不区分大小写 注释有三种常见写法： 123--           单行注释，注意 -- 后面要有空格#            MySQL 特有的单行注释/*    */     多行注释  数据类型MySQL 中储存的数据有以下数据类型  tinyint1字节有符号整型，范围是-128-127 tinyint unsigned1字节无符号...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%A6%82%E5%BF%B5%E4%BB%A5%E5%8F%8Amysql%E9%85%8D%E7%BD%AE/" title="数据库概念以及MySQL配置"><img class="post-bg" src="/img/covers/cover-005.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="数据库概念以及MySQL配置"></a></div><div class="recent-post-info"><a class="article-title" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%A6%82%E5%BF%B5%E4%BB%A5%E5%8F%8Amysql%E9%85%8D%E7%BD%AE/" title="数据库概念以及MySQL配置">数据库概念以及MySQL配置</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-06-04T05:30:03.000Z" title="发表于 2026-06-04 13:30:03">2026-06-04</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></span></div><div class="content">数据库概念数据库，英文是 Database，简称 DB，可以把他简单理解为有组织地存储和管理数据的仓库，普通文件也能存储数据，但数据库会按照库、表、字段、记录这些结构来管理数据 数据库管理系统，英文是 DBMS，全称 Database Management System，是实际安装在系统里的大型软件，MySQL、MariaDB、Oracle、SQL Server、PostgreSQL、DB2、SQLite 这些都属于数据库管理系统 具体概念如下： 1234DB：数据库，保存数据的仓库DBMS：数据库管理系统，管理数据库的软件SQL：操作关系型数据库的语言MySQL：一种具体的数据库管理系统  MySQL数据库配置MySQL 常见主配置文件是 /etc/my.cnf 12345678910111213141516171819202122[mysqld]max_connections=200                      设置最大连接数max_allowed_packet=32Mcharacter-set-server=utf8mb4             设置字符集c...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/web%E6%9C%8D%E5%8A%A1/tomcat-%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE/" title="tomcat 基础配置"><img class="post-bg" src="/img/covers/cover-054.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="tomcat 基础配置"></a></div><div class="recent-post-info"><a class="article-title" href="/web%E6%9C%8D%E5%8A%A1/tomcat-%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE/" title="tomcat 基础配置">tomcat 基础配置</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-31T09:13:06.000Z" title="发表于 2026-05-31 17:13:06">2026-05-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/web%E6%9C%8D%E5%8A%A1/">web服务</a></span></div><div class="content">Tomcat 是 Java 写的，运行离不开 JDK&#x2F;JRE，需要有 JAVA 环境 在 catalina.sh 和 setclasspath.sh 中添加 1JAVA_HOME=java环境目录  Tomcat 解压后常见目录： 1234567bin       启动、关闭、核心脚本conf      配置文件lib       Tomcat 和 Web 应用依赖的公共库logs      日志webapps   应用发布目录temp      临时文件work      JSP 编译后的工作目录  bin 里常见： 123startup.sh    启动脚本shutdown.sh   关闭脚本catalina.sh   核心控制脚本  conf 里重点是： 123server.xml          端口、Connector、Host 等核心配置web.xml             默认 Web 应用配置tomcat-users.xml    管理用户和角色 </div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/web%E6%9C%8D%E5%8A%A1/nginx-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E9%85%8D%E7%BD%AE/" title="Nginx 性能优化配置"><img class="post-bg" src="/img/covers/cover-052.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Nginx 性能优化配置"></a></div><div class="recent-post-info"><a class="article-title" href="/web%E6%9C%8D%E5%8A%A1/nginx-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E9%85%8D%E7%BD%AE/" title="Nginx 性能优化配置">Nginx 性能优化配置</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-31T05:15:04.000Z" title="发表于 2026-05-31 13:15:04">2026-05-31</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/web%E6%9C%8D%E5%8A%A1/">web服务</a></span></div><div class="content">Nginx 默认参数偏保守，适合最小硬件环境。真实业务里通常会调整 高并发优化：worker 和连接数12345worker_processes auto;events &#123;    worker_connections 4096;&#125;  worker_processes 通常按 CPU 核心数设置，直接 auto 就可以 worker_connections 是每个 worker 的最大连接数，可以从 4096 起步，并且习惯上取 2 的指数。如果 Nginx 是反向代理，一个客户端请求可能同时占用客户端连接和后端连接，所以理论连接数不能简单等于客户端数量 长连接优化：keepaliveHTTP 基于 TCP，每次短连接都要三次握手、四次挥手。keepalive 的作用就是复用连接 12keepalive_timeout 15;keepalive_requests 8192;  默认是 65 秒，建议改到 15 秒左右，太长会让空闲连接长期占用 fd、worker_connections 和内存 keepalive_requests 表示一个长连接最多处理多少个请...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/web%E6%9C%8D%E5%8A%A1/nginx-%E5%8A%9F%E8%83%BD%E9%85%8D%E7%BD%AE/" title="Nginx 功能配置"><img class="post-bg" src="/img/covers/cover-050.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Nginx 功能配置"></a></div><div class="recent-post-info"><a class="article-title" href="/web%E6%9C%8D%E5%8A%A1/nginx-%E5%8A%9F%E8%83%BD%E9%85%8D%E7%BD%AE/" title="Nginx 功能配置">Nginx 功能配置</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-30T12:34:05.000Z" title="发表于 2026-05-30 20:34:05">2026-05-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/web%E6%9C%8D%E5%8A%A1/">web服务</a></span></div><div class="content">访问控制 allow &#x2F; deny 和 auth_basicNginx 可以按 IP 做访问控制： 123456location /a/ &#123;    allow 127.0.0.1;    allow 117.51.154.71;    allow 192.168.31.0/24;    deny all;&#125;  顺序是从上往下判断。上面这段意思是：允许本机、指定公网 IP、指定网段访问，其他全部拒绝。 如果不是按 IP，而是要求输入用户名密码，就用 Basic Auth： 1234location /b/ &#123;    auth_basic &quot;test&quot;;    test只是一个名字，可以任意    auth_basic_user_file /opt/nginx/passwd/htpasswd;  密码文件路径&#125;  密码文件可以用 htpasswd 生成： 1234yum install httpd-tools -y                     下载 httpasswdmkdir -p /opt/ngin...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/web%E6%9C%8D%E5%8A%A1/nginx-%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/" title="nginx 基本配置"><img class="post-bg" src="/img/covers/cover-051.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="nginx 基本配置"></a></div><div class="recent-post-info"><a class="article-title" href="/web%E6%9C%8D%E5%8A%A1/nginx-%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/" title="nginx 基本配置">nginx 基本配置</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-30T09:11:24.000Z" title="发表于 2026-05-30 17:11:24">2026-05-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/web%E6%9C%8D%E5%8A%A1/">web服务</a></span></div><div class="content">Nginx 可以做 Web 服务器、反向代理服务器，也能承担邮件代理相关功能。它比较典型的特点是轻量、资源消耗低、并发能力强。 和 Apache 相比，Nginx 的优势主要来自事件驱动和异步非阻塞模型。Apache 更偏阻塞式处理，请求多了以后进程&#x2F;线程资源压力会变大；Nginx 借助 epoll 模型，用较少的 worker 来处理大量连接。 Nginx 是典型的 master + worker 模型。master 负责读取配置、管理 worker ，worker 负责处理请求。 12345通过yum安装的nginx有以下四个重要目录/etc/nginx 					nginx所有的文件和配置都在这个目录/usr/share/nginx/html				网站根目录/var/log/nginx					nginx日志目录/var/cache/nginx                                缓存目录  本文重点就在于 nginx 配置文件写法 结构Nginx 配置不是平铺的，它按上下文划分，一个常见的配置文件 nginx.conf 如 12345...</div></div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/#content-inner">6</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.svg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Threcial</div><div class="author-info-description">Threcial 的技术笔记？</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">63</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">60</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Threcial"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Threcial" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fas fa-rss" style="color: #f26522;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这里记录 Linux 运维、计算机网络与网络安全的学习笔记。</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/linux/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%AE%B0%E5%BD%95/" title="网站性能优化记录"><img src="/img/covers/cover-060.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="网站性能优化记录"/></a><div class="content"><a class="title" href="/linux/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%AE%B0%E5%BD%95/" title="网站性能优化记录">网站性能优化记录</a><time datetime="2026-07-03T07:51:56.000Z" title="发表于 2026-07-03 15:51:56">2026-07-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/docker/docker%E5%9F%BA%E7%A1%80/" title="Docker基础"><img src="/img/covers/cover-001.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Docker基础"/></a><div class="content"><a class="title" href="/docker/docker%E5%9F%BA%E7%A1%80/" title="Docker基础">Docker基础</a><time datetime="2026-06-15T07:10:25.000Z" title="发表于 2026-06-15 15:10:25">2026-06-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E4%B8%8E%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="MySQL 备份恢复与主从复制"><img src="/img/covers/cover-002.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL 备份恢复与主从复制"/></a><div class="content"><a class="title" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E4%B8%8E%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="MySQL 备份恢复与主从复制">MySQL 备份恢复与主从复制</a><time datetime="2026-06-07T02:22:41.000Z" title="发表于 2026-06-07 10:22:41">2026-06-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E3%80%81%E8%A7%A6%E5%8F%91%E5%99%A8%E3%80%81%E7%B4%A2%E5%BC%95/" title="MySQL 常用函数、触发器、索引"><img src="/img/covers/cover-003.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL 常用函数、触发器、索引"/></a><div class="content"><a class="title" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E3%80%81%E8%A7%A6%E5%8F%91%E5%99%A8%E3%80%81%E7%B4%A2%E5%BC%95/" title="MySQL 常用函数、触发器、索引">MySQL 常用函数、触发器、索引</a><time datetime="2026-06-06T12:40:56.000Z" title="发表于 2026-06-06 20:40:56">2026-06-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E4%BA%8B%E5%8A%A1%E3%80%81%E8%A7%86%E5%9B%BE%E3%80%81%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" title="MySQL 事务、视图、存储过程"><img src="/img/covers/cover-049.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL 事务、视图、存储过程"/></a><div class="content"><a class="title" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E4%BA%8B%E5%8A%A1%E3%80%81%E8%A7%86%E5%9B%BE%E3%80%81%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" title="MySQL 事务、视图、存储过程">MySQL 事务、视图、存储过程</a><time datetime="2026-06-06T12:14:32.000Z" title="发表于 2026-06-06 20:14:32">2026-06-06</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline"><i class="fas fa-folder-open"></i><span>分类</span><a class="card-more-btn" href="/categories/" title="查看更多">
+      <i class="fas fa-angle-right"></i></a></div>
+          <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/CTF/"><span class="card-category-list-name">CTF</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/docker/"><span class="card-category-list-name">docker</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/linux/"><span class="card-category-list-name">linux</span><span class="card-category-list-count">28</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/web%E6%9C%8D%E5%8A%A1/"><span class="card-category-list-name">web服务</span><span class="card-category-list-count">5</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/"><span class="card-category-list-name">信息安全</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/"><span class="card-category-list-name">密码学</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"><span class="card-category-list-name">数据库</span><span class="card-category-list-count">6</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/"><span class="card-category-list-name">网络安全</span><span class="card-category-list-count">5</span></a></li>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/ARP/" style="font-size: 1.1em; color: #999">ARP</a> <a href="/tags/DNS/" style="font-size: 1.1em; color: #999">DNS</a> <a href="/tags/IP/" style="font-size: 1.1em; color: #999">IP</a> <a href="/tags/RIP/" style="font-size: 1.1em; color: #999">RIP</a> <a href="/tags/TCP-IP%E6%A8%A1%E5%9E%8B/" style="font-size: 1.1em; color: #999">TCP/IP模型</a> <a href="/tags/VRP/" style="font-size: 1.2em; color: #999da3">VRP</a> <a href="/tags/bash/" style="font-size: 1.1em; color: #999">bash</a> <a href="/tags/centos7/" style="font-size: 1.1em; color: #999">centos7</a> <a href="/tags/dhcp/" style="font-size: 1.1em; color: #999">dhcp</a> <a href="/tags/docker/" style="font-size: 1.1em; color: #999">docker</a> <a href="/tags/firewalld/" style="font-size: 1.1em; color: #999">firewalld</a> <a href="/tags/ftp/" style="font-size: 1.1em; color: #999">ftp</a> <a href="/tags/linux/" style="font-size: 1.3em; color: #99a1ac">linux</a> <a href="/tags/linux%E4%BB%8E0%E5%BC%80%E5%A7%8B/" style="font-size: 1.5em; color: #99a9bf">linux从0开始</a> <a href="/tags/mysql/" style="font-size: 1.4em; color: #99a5b6">mysql</a> <a href="/tags/nginx/" style="font-size: 1.4em; color: #99a5b6">nginx</a> <a href="/tags/ospf/" style="font-size: 1.1em; color: #999">ospf</a> <a href="/tags/rsync/" style="font-size: 1.1em; color: #999">rsync</a> <a href="/tags/sql/" style="font-size: 1.1em; color: #999">sql</a> <a href="/tags/sql%E6%B3%A8%E5%85%A5/" style="font-size: 1.1em; color: #999">sql注入</a> <a href="/tags/ssh/" style="font-size: 1.2em; color: #999da3">ssh</a> <a href="/tags/tar/" style="font-size: 1.1em; color: #999">tar</a> <a href="/tags/tomcat/" style="font-size: 1.1em; color: #999">tomcat</a> <a href="/tags/web%E4%B8%AD%E9%97%B4%E4%BB%B6/" style="font-size: 1.1em; color: #999">web中间件</a> <a href="/tags/wordpress/" style="font-size: 1.1em; color: #999">wordpress</a> <a href="/tags/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" style="font-size: 1.1em; color: #999">主从复制</a> <a href="/tags/%E4%BA%8B%E5%8A%A1/" style="font-size: 1.1em; color: #999">事务</a> <a href="/tags/%E4%BC%98%E5%8C%96/" style="font-size: 1.1em; color: #999">优化</a> <a href="/tags/%E5%87%BD%E6%95%B0/" style="font-size: 1.1em; color: #999">函数</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1/" style="font-size: 1.1em; color: #999">动态路由</a> <a href="/tags/%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1%E5%8D%8F%E8%AE%AE/" style="font-size: 1.1em; color: #999">动态路由协议</a> <a href="/tags/%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D/" style="font-size: 1.1em; color: #999">备份恢复</a> <a href="/tags/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" style="font-size: 1.1em; color: #999">存储过程</a> <a href="/tags/%E5%AE%89%E8%A3%85/" style="font-size: 1.1em; color: #999">安装</a> <a href="/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" style="font-size: 1.1em; color: #999">定时任务</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 1.1em; color: #999">工具</a> <a href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" style="font-size: 1.1em; color: #999">性能优化</a> <a href="/tags/%E6%89%93%E5%8C%85/" style="font-size: 1.1em; color: #999">打包</a> <a href="/tags/%E6%89%93%E5%8C%85%E5%8E%8B%E7%BC%A9/" style="font-size: 1.1em; color: #999">打包压缩</a> <a href="/tags/%E6%8E%92%E6%9F%A5/" style="font-size: 1.1em; color: #999">排查</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/07/">
+            <span class="card-archive-list-date">
+              七月 2026
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/06/">
+            <span class="card-archive-list-date">
+              六月 2026
+            </span>
+            <span class="card-archive-list-count">7</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/05/">
+            <span class="card-archive-list-date">
+              五月 2026
+            </span>
+            <span class="card-archive-list-count">16</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/04/">
+            <span class="card-archive-list-date">
+              四月 2026
+            </span>
+            <span class="card-archive-list-count">29</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/10/">
+            <span class="card-archive-list-date">
+              十月 2025
+            </span>
+            <span class="card-archive-list-count">9</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/08/">
+            <span class="card-archive-list-date">
+              八月 2024
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">63</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Threcial</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.7.1.260810</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.1.260810"></script><script src="/js/main.js?v=5.7.1.260810"></script><div class="js-pjax"><script>window.typedJSFn = {
+  _seq: 0,
+  init: str => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, null))
+  },
+  run: subtitleType => {
+    const seq = ++window.typedJSFn._seq
+    const invoke = () => {
+      if (seq === window.typedJSFn._seq) subtitleType()
+    }
+
+    if (true) {
+      if (typeof Typed === 'function') invoke()
+      else btf.getScript('https://cdn.jsdelivr.net/npm/typed.js@3.0.0/dist/typed.umd.min.js').then(invoke)
+    } else {
+      invoke()
+    }
+  },
+  fetchSubtitle: (fetcher, parser) => {
+    const seq = window.typedJSFn._seq
+    Promise.resolve()
+      .then(fetcher)
+      .then(parser)
+      .then(({ content, extra = [] }) => {
+        if (seq !== window.typedJSFn._seq) return
+        typedJSFn.processSubtitle(content, extra)
+      })
+      .catch(err => {
+        if (seq !== window.typedJSFn._seq) return
+        console.error('Failed to get the subtitle API:', err)
+        typedJSFn.processSubtitle(["记录 Linux、网络工程与网络安全的学习过程","CTF 题解 · 密码学 · 等级保护"])
+      })
+  },
+  processSubtitle: (content, extraContents = []) => {
+    if (true) {
+      const sub = ["记录 Linux、网络工程与网络安全的学习过程","CTF 题解 · 密码学 · 等级保护"].slice()
+
+      if (extraContents.length > 0) {
+        sub.unshift(...extraContents)
+      }
+
+      if (typeof content === 'string') {
+        sub.unshift(content)
+      } else if (Array.isArray(content)) {
+        sub.unshift(...content)
+      }
+
+      sub.length > 0 && typedJSFn.init(sub)
+    } else {
+      document.getElementById('subtitle').textContent = typeof content === 'string' ? content :
+        (Array.isArray(content) && content.length > 0 ? content[0] : '')
+    }
+  }
+}
+btf.addGlobalFn('pjaxSendOnce', () => {
+  window.typedJSFn._seq++
+  typed && typed.destroy()
+  window.typed = null
+}, 'typedDestroy')
+</script><script>function subtitleType () {
+  typedJSFn.processSubtitle(["记录 Linux、网络工程与网络安全的学习过程","CTF 题解 · 密码学 · 等级保护"])
+}
+typedJSFn.run(subtitleType)</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

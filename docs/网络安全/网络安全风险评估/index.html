@@ -1,0 +1,391 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>网络安全风险评估 | Threcial</title><meta name="author" content="Threcial"><meta name="copyright" content="Threcial"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="基本原则和基本流程 在安全风险评估过程中 首先要确定保护的对象（或者资产）是什么？它的直接和间接价值如何？ 其次，资产面临哪些潜在威胁？导致的问题所在？威胁发生的可能性有多大？是否存在已潜伏的威胁？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络安全风险评估">
+<meta property="og:url" content="https://threcial.github.io/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9%E8%AF%84%E4%BC%B0/index.html">
+<meta property="og:site_name" content="Threcial">
+<meta property="og:description" content="基本原则和基本流程 在安全风险评估过程中 首先要确定保护的对象（或者资产）是什么？它的直接和间接价值如何？ 其次，资产面临哪些潜在威胁？导致的问题所在？威胁发生的可能性有多大？是否存在已潜伏的威胁？">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://threcial.github.io/img/covers/cover-042.jpg">
+<meta property="article:published_time" content="2025-10-13T02:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-13T02:00:00.000Z">
+<meta property="article:author" content="Threcial">
+<meta property="article:tag" content="Linux,计算机网络,网络安全,运维,数据库,Nginx">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://threcial.github.io/img/covers/cover-042.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "网络安全风险评估",
+  "url": "https://threcial.github.io/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9%E8%AF%84%E4%BC%B0/",
+  "image": "https://threcial.github.io/img/covers/cover-042.jpg",
+  "datePublished": "2025-10-13T02:00:00.000Z",
+  "dateModified": "2025-10-13T02:00:00.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Threcial",
+      "url": "https://threcial.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.svg"><link rel="canonical" href="https://threcial.github.io/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9%E8%AF%84%E4%BC%B0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.7.1.260810"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        try {
+          const data = { value }
+
+          if (ttl != null) {
+            data.expiry = Date.now() + ttl * 86400000
+          }
+
+          localStorage.setItem(key, JSON.stringify(data))
+        } catch (e) {
+          console.error(e)
+        }
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '网络安全风险评估',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="Threcial" type="application/atom+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/covers/cover-056.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.svg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">63</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">60</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img fixed" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Threcial</span></a><a class="nav-page-title" href="/"><span class="site-name">网络安全风险评估</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">网络安全风险评估</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-10-13T02:00:00.000Z" title="发表于 2025-10-13 10:00:00">2025-10-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-10-13T02:00:00.000Z" title="更新于 2025-10-13 10:00:00">2025-10-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="container post-content" id="article-container"><h2 id="基本原则和基本流程"><a href="#基本原则和基本流程" class="headerlink" title="基本原则和基本流程"></a>基本原则和基本流程</h2><p>在安全风险评估过程中</p>
+<p>首先要确定保护的对象（或者资产）是什么？它的直接和间接价值如何？</p>
+<p>其次，资产面临哪些潜在威胁？导致的问题所在？威胁发生的可能性有多大？是否存在已潜伏的威胁？</p>
+<p>第三，资产中存在哪些脆弱点可能会被威胁利用？利用的难易程度又如何？</p>
+<p>第四，一旦事件发生，组织会遭受怎样的损失或者面临怎样的负面影响？</p>
+<p>第五，目前现有的控制措施是否能够防护资产面临的风险？最后，组织应该采取怎样的安全措施才能将风险带来的损失降低到最低程度？</p>
+<p>解决以上问题的过程，就是安全风险评估的过程。</p>
+<p>流程图如下</p>
+<p><img src="/img/legacy/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9%E8%AF%84%E4%BC%B0-1.png"></p>
+<p>总体</p>
+<ol>
+<li><p>准备阶段</p>
+<ul>
+<li><p>确定评估范围</p>
+<ul>
+<li>现场访谈客户确定评估范围，主要对象是确定评估系统数量及相关服务器、安全设备、网络设备等硬件设备数量</li>
+</ul>
+</li>
+<li><p>建立评估组织架构</p>
+<ul>
+<li><p><img src="/img/legacy/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9%E8%AF%84%E4%BC%B0-2.png"></p>
+</li>
+<li><p>根据上图的架构，配备相应的人员</p>
+<p>  评估项目组组长：负责授权评估项目负责人建立安全风险评估团队、审批项目方案计划和审批项目报告</p>
+<p>  项目实施负责人：负责组建项目团队各小组，并指定组长和成员、负责方案计划的编制、负责协调项目所涉及到的各部门人员、负责项目的进度及质量，负责组织审核确认各过程文档，负责安全风险评估报告的编制和负责向领导小组汇报项目实施情况</p>
+<p>  资产识别组：负责信息资产的识别工作，并向项目负责人提交阶段成果文档</p>
+<p>  脆弱性威胁评估组：负责对资产进行脆弱性威胁评估工作以及防护能力测试评估工作，并向项目负责人提交阶段成果文档</p>
+<p>  风险分析组：对资产进行安全措施有效性确认的基础上进行风险分析，形成最终的安全风险评估报告，并向项目负责人提交阶段成果文档</p>
+<p>  应急响应组：负责在出现意外情况时进行应急响应</p>
+</li>
+</ul>
+</li>
+<li><p>编制方案及计划</p>
+<ul>
+<li>根据已确定的评估范围、评估组织以及初步调研的业务现状，确定服务方式及工具并制定工作方案计划，交由项目组组长审批</li>
+</ul>
+</li>
+<li><p>签署责任书</p>
+</li>
+<li><p>召开项目启动会议，项目启动</p>
+</li>
+</ul>
+</li>
+<li><p>资产识别</p>
+<ul>
+<li><p>通过资产识别清单收集相关资产，进行信息资产识别时，需要收集资产的名称、业务描述、责任人等信息，主要收集以下几个方面的资产：</p>
+<ul>
+<li><p>业务应用（信息系统）</p>
+</li>
+<li><p>文档和数据(网络拓扑图、资产台账、信息系统相关文档、信息系统数据库数据)</p>
+</li>
+<li><p>软硬件资产（服务器设备、安全设备、存储设备、系统软件、应用软件等）</p>
+</li>
+<li><p>物理环境（机房等）</p>
+</li>
+<li><p>组织管理（规章制度等）</p>
+</li>
+</ul>
+</li>
+<li><p>区分资产重要性</p>
+</li>
+<li><p>重要资产估值</p>
+</li>
+<li><p>配合要求</p>
+<ul>
+<li>资产责任人根据资产识别表要求填写信息系统的各项资产清单，确保各项资产信息的真实、准确，无遗漏，并确定是否为重要资产</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>威胁性脆弱性识别</p>
+<ul>
+<li><p>脆弱性评估需针对每一项需要保护的信息资产，找到其存在的弱点。常见的弱点有三类：</p>
+<ul>
+<li><p>技术型弱点——系统、程序、设备中存在的漏洞或缺陷，比如结构设计问题和编程漏洞</p>
+</li>
+<li><p>操作性弱点——软件和系统在配置、操作、使用中的缺陷，包括人员在日常工作中的不良习惯，审计和备份的缺乏</p>
+</li>
+<li><p>管理性的弱点——策略、程序、规章制度、人员意识、组织结构等方面的不足</p>
+</li>
+</ul>
+</li>
+<li><p>脆弱性评估方式</p>
+<ul>
+<li><p>利用漏洞扫描器对业务系统（重点扫描对象）、主机、网络设备及安全设备进行漏洞扫描</p>
+</li>
+<li><p>通过基线核查设备对硬件资产本地安全策略进行检查</p>
+</li>
+<li><p>通过调查问卷补充发现其他的脆弱点（此项需要客户配合填写，或者以访谈形式现场问答并记录结果）</p>
+</li>
+<li><p>通过业务系统进行渗透测试</p>
+</li>
+</ul>
+</li>
+<li><p>配合要求</p>
+<ul>
+<li><p>提供可供网络扫描使用的网络接口和IP地址（有防火墙的，需确保防火墙策略对该IP全通）</p>
+</li>
+<li><p>需有管理员支持或提供被核查服务器的管理员帐号和密码</p>
+</li>
+<li><p>提供可正常访问安全设备和业务系统的网络接口及业务系统的后台管理员帐号、密码</p>
+</li>
+<li><p>配合实施人员的访谈工作</p>
+</li>
+</ul>
+</li>
+<li><p>在评估威胁时，脆弱性威胁评估小组应该根据资产目前所处的环境条件和以前的记录情况来判断。评估威胁关键在于确认引发威胁的人或事物，即所谓的威胁源。威胁源包括以下部分：</p>
+<ul>
+<li><p>人员威胁——包括故意破坏和无意失误</p>
+</li>
+<li><p>系统威胁——系统、网络或服务的故障</p>
+</li>
+<li><p>环境威胁——电源故障、污染、液体泄漏、火灾等</p>
+</li>
+<li><p>自然威胁——洪水、地震、台风、滑坡、雷电等</p>
+</li>
+</ul>
+</li>
+<li><p>常规威胁分析</p>
+<ul>
+<li>通过已有的常规威胁库，和重要资产的脆弱性情况，直接获得重要资产可能遭受哪些具体威胁的破坏，或对一些安全事件表面现象进行分析后，间接获得安全事件背后的威胁源头</li>
+</ul>
+</li>
+<li><p>潜在威胁分析</p>
+<ul>
+<li>通过态势感知（SIP只针对服务器数量较多的场景）、勒索软件、webshellkill专杀软件等专用工具评估已经潜伏在客户内部网络环境中的威胁</li>
+</ul>
+</li>
+<li><p>配合要求</p>
+<ul>
+<li><p>提供可供网络扫描使用的网络接口和IP地址（有防火墙的，需确保防火墙策略对该IP全通）</p>
+</li>
+<li><p>需有管理员支持或提供服务器、网络设备等的管理员帐号和密码</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>防护能力评估</p>
+<p> 影响安全事件发生的内部条件中，除了资产的弱点，另一个就是组织现有的安全措施能否真正提供防护效果。识别已有的安全控制措施，分析安全措施的效力，确定威胁利用弱点的实际可能性，一方面可以指出当前安全措施的不足，另一方面也可以避免重复投资</p>
+<ul>
+<li><p>防护能力评估方式</p>
+<ul>
+<li><p>通过人员访谈途径就可以识别出现有的安全措施。对已识别的安全控制措施，评估其效力，这可以通过相关文档的复查及技术性测试等途径来进行</p>
+</li>
+<li><p>防护能力评估主要分析以下场景：漏洞利用防护、身份认证、通信监听伪造、监控审计、应急备份等</p>
+</li>
+</ul>
+</li>
+<li><p>配合要求</p>
+<ul>
+<li><p>提供可供网络扫描使用的业务系统访问地址，服务器ip等信息</p>
+</li>
+<li><p>需有管理员支持或提供服务器、网络设备等的管理员帐号和密码</p>
+</li>
+<li><p>提供可正常访问安全设备和业务系统的网络接口及业务系统的测试帐号、密码</p>
+</li>
+<li><p>配合实施人员的访谈工作</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>风险分析方法</p>
+<ul>
+<li><p>风险分析模型</p>
+<ul>
+<li><p>资产风险值 ＝ 资产估值 * 风险系数 *（ 1 - 20% * 防护能力系数 ）</p>
+<p>  风险系数 &#x3D; 脆弱性程度 * 威胁程度</p>
+<p>  我们设定资产风险值大于等于41的风险都属于不可接受风险，反之则认为风险可接受</p>
+</li>
+</ul>
+</li>
+<li></li>
+</ul>
+</li>
+<li><p>风险处理</p>
+<ul>
+<li>针对不可接受风险提出相应的整改方案及计划完成时间，交付文档：《不可接受风险处理计划》</li>
+</ul>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://threcial.github.io">Threcial</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://threcial.github.io/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9%E8%AF%84%E4%BC%B0/">https://threcial.github.io/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9%E8%AF%84%E4%BC%B0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://threcial.github.io" target="_blank">Threcial</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/covers/cover-042.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%86%E7%A0%81%E5%AD%A6/" title="密码学"><img class="cover" src="/img/covers/cover-057.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">密码学</div></div><div class="info-2"><div class="info-item-1">密码是密码算法、密钥管理和密码协议的总合。  密码算法是指实现明密变换的数学模型、逻辑结构、变化函数，是密码中相对固定的部分  密钥是参与、控制密码算法实现明密变换的可变参数，是密码中最活跃的部分  密码协议是指为完成特定任务而应用密码所必需遵循的操作步骤，是密码中最稳定的部分。最基本的密码协议是密钥交换协议和身份鉴别协议   古典密码的主要编制方法 置换密码 (移项式密码)：改变明文里字符顺序形成密文  替换密码 (替换式密码)：对明文字符进行替换，如凯撒密码，维吉尼亚密码   分组密码分组密码首先对明文消息根据分组大小进行分组，再将明文分组、密钥和初始向量（如果有）一起作为输入，通过分组加密算法直接输出密文分组。 分组密码算法DES ( Data Encryption Standard ) - 数据加密标准 对称加密算法  诞生于1970年  分组长度 64 位   密钥长度 56 位 + 8 位奇偶校验位  现已被证实不安全，不推荐使用   3DES ( Triple DES ) - 三重数据加密算法 对称加密算法  诞生于 1990 年  分组长度 64 位  密钥长度 ...</div></div></div></a><a class="pagination-related" href="/CTF/GXYCTF2019-luck_guy/" title="[GXYCTF2019]luck_guy"><img class="cover" src="/img/covers/cover-043.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">[GXYCTF2019]luck_guy</div></div><div class="info-2"><div class="info-item-1">查壳ELF文件，GCC编译，无壳 IDA分析追踪 patch_me 可疑函数，发现 get_flag 函数，对其进一步分析可以得到 flag 的生成步骤  给出变量 s 并赋值到 f2 对 f2  进行变换 组合 f1 和 f2 成为 flag  关键字段 s = 9180147350284624745LL;   f1 = GXY{do_not_ 其中LL表示long long 类型, 由于ELF文件采用小端序储存数据，IDA采用大端序解读数据，真实数据应颠倒前后顺序 源数据转为十六进制为 0x7F666F6067756369LL 脚本复刻步骤生成最终 f2 123456789a = &#x27;7F666F6067756369&#x27;b = []for i in [0,2,4,6,8,10,12,14]:    b.insert(0, int(a[i]+a[i+1], 16))for i in range(8):    if i % 2 == 1:        print(chr(b[i]-2), end=&quot;&quot;)    else:        pri...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.svg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Threcial</div><div class="author-info-description">Threcial 的技术笔记？</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">63</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">60</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Threcial"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Threcial" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fas fa-rss" style="color: #f26522;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这里记录 Linux 运维、计算机网络与网络安全的学习笔记。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E5%88%99%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">基本原则和基本流程</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/linux/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%AE%B0%E5%BD%95/" title="网站性能优化记录"><img src="/img/covers/cover-060.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="网站性能优化记录"/></a><div class="content"><a class="title" href="/linux/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%AE%B0%E5%BD%95/" title="网站性能优化记录">网站性能优化记录</a><time datetime="2026-07-03T07:51:56.000Z" title="发表于 2026-07-03 15:51:56">2026-07-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/docker/docker%E5%9F%BA%E7%A1%80/" title="Docker基础"><img src="/img/covers/cover-001.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Docker基础"/></a><div class="content"><a class="title" href="/docker/docker%E5%9F%BA%E7%A1%80/" title="Docker基础">Docker基础</a><time datetime="2026-06-15T07:10:25.000Z" title="发表于 2026-06-15 15:10:25">2026-06-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E4%B8%8E%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="MySQL 备份恢复与主从复制"><img src="/img/covers/cover-002.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL 备份恢复与主从复制"/></a><div class="content"><a class="title" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E4%B8%8E%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="MySQL 备份恢复与主从复制">MySQL 备份恢复与主从复制</a><time datetime="2026-06-07T02:22:41.000Z" title="发表于 2026-06-07 10:22:41">2026-06-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E3%80%81%E8%A7%A6%E5%8F%91%E5%99%A8%E3%80%81%E7%B4%A2%E5%BC%95/" title="MySQL 常用函数、触发器、索引"><img src="/img/covers/cover-003.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL 常用函数、触发器、索引"/></a><div class="content"><a class="title" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E3%80%81%E8%A7%A6%E5%8F%91%E5%99%A8%E3%80%81%E7%B4%A2%E5%BC%95/" title="MySQL 常用函数、触发器、索引">MySQL 常用函数、触发器、索引</a><time datetime="2026-06-06T12:40:56.000Z" title="发表于 2026-06-06 20:40:56">2026-06-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E4%BA%8B%E5%8A%A1%E3%80%81%E8%A7%86%E5%9B%BE%E3%80%81%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" title="MySQL 事务、视图、存储过程"><img src="/img/covers/cover-049.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL 事务、视图、存储过程"/></a><div class="content"><a class="title" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E4%BA%8B%E5%8A%A1%E3%80%81%E8%A7%86%E5%9B%BE%E3%80%81%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" title="MySQL 事务、视图、存储过程">MySQL 事务、视图、存储过程</a><time datetime="2026-06-06T12:14:32.000Z" title="发表于 2026-06-06 20:14:32">2026-06-06</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Threcial</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.7.1.260810</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.1.260810"></script><script src="/js/main.js?v=5.7.1.260810"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

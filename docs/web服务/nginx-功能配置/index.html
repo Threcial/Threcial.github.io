@@ -1,0 +1,303 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Nginx 功能配置 | Threcial</title><meta name="author" content="Threcial"><meta name="copyright" content="Threcial"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="访问控制 allow &#x2F; deny 和 auth_basic Nginx 可以按 IP 做访问控制： location &#x2F;a&#x2F; { allow 127.0.0.1; allow 117.51.154.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx 功能配置">
+<meta property="og:url" content="https://threcial.github.io/web%E6%9C%8D%E5%8A%A1/nginx-%E5%8A%9F%E8%83%BD%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:site_name" content="Threcial">
+<meta property="og:description" content="访问控制 allow &#x2F; deny 和 auth_basic Nginx 可以按 IP 做访问控制： location &#x2F;a&#x2F; { allow 127.0.0.1; allow 117.51.154.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://threcial.github.io/img/covers/cover-050.jpg">
+<meta property="article:published_time" content="2026-05-30T12:34:05.000Z">
+<meta property="article:modified_time" content="2026-05-30T12:34:05.000Z">
+<meta property="article:author" content="Threcial">
+<meta property="article:tag" content="nginx">
+<meta property="article:tag" content="配置">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://threcial.github.io/img/covers/cover-050.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Nginx 功能配置",
+  "url": "https://threcial.github.io/web%E6%9C%8D%E5%8A%A1/nginx-%E5%8A%9F%E8%83%BD%E9%85%8D%E7%BD%AE/",
+  "image": "https://threcial.github.io/img/covers/cover-050.jpg",
+  "datePublished": "2026-05-30T12:34:05.000Z",
+  "dateModified": "2026-05-30T12:34:05.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Threcial",
+      "url": "https://threcial.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.svg"><link rel="canonical" href="https://threcial.github.io/web%E6%9C%8D%E5%8A%A1/nginx-%E5%8A%9F%E8%83%BD%E9%85%8D%E7%BD%AE/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.7.1.260810"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        try {
+          const data = { value }
+
+          if (ttl != null) {
+            data.expiry = Date.now() + ttl * 86400000
+          }
+
+          localStorage.setItem(key, JSON.stringify(data))
+        } catch (e) {
+          console.error(e)
+        }
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Nginx 功能配置',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="Threcial" type="application/atom+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/covers/cover-056.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.svg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">63</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">60</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img fixed" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Threcial</span></a><a class="nav-page-title" href="/"><span class="site-name">Nginx 功能配置</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Nginx 功能配置</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-30T12:34:05.000Z" title="发表于 2026-05-30 20:34:05">2026-05-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-30T12:34:05.000Z" title="更新于 2026-05-30 20:34:05">2026-05-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/web%E6%9C%8D%E5%8A%A1/">web服务</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="container post-content" id="article-container"><h2 id="访问控制-allow-deny-和-auth-basic"><a href="#访问控制-allow-deny-和-auth-basic" class="headerlink" title="访问控制 allow &#x2F; deny 和 auth_basic"></a>访问控制 allow &#x2F; deny 和 auth_basic</h2><p>Nginx 可以按 IP 做访问控制：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">location /a/ &#123;</span><br><span class="line">    allow 127.0.0.1;</span><br><span class="line">    allow 117.51.154.71;</span><br><span class="line">    allow 192.168.31.0/24;</span><br><span class="line">    deny all;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>顺序是从上往下判断。上面这段意思是：允许本机、指定公网 IP、指定网段访问，其他全部拒绝。</p>
+<p>如果不是按 IP，而是要求输入用户名密码，就用 Basic Auth：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location /b/ &#123;</span><br><span class="line">    auth_basic &quot;test&quot;;    test只是一个名字，可以任意</span><br><span class="line">    auth_basic_user_file /opt/nginx/passwd/htpasswd;  密码文件路径</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>密码文件可以用 <code>htpasswd</code> 生成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum install httpd-tools -y                     下载 httpasswd</span><br><span class="line">mkdir -p /opt/nginx/passwd                     创建一个放密码文件的目录</span><br><span class="line">htpasswd -c /opt/nginx/passwd/htpasswd user1   -c 创建一个密码文件并添加user1用户</span><br><span class="line">htpasswd -m /opt/nginx/passwd/htpasswd user2   -m 添加用户，-c 会重新创建</span><br></pre></td></tr></table></figure>
+
+<p><strong><code>-c</code> 是创建文件，已有文件后再加用户不要重复用 <code>-c</code>，否则会覆盖原文件</strong></p>
+<h2 id="防盗链"><a href="#防盗链" class="headerlink" title="防盗链"></a>防盗链</h2><p>防盗链原理：根据 HTTP 请求头里的 <code>Referer</code> 判断这个资源是不是从允许的页面引用过来的</p>
+<p>典型配置：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location ~* \.(png)$ &#123;</span><br><span class="line">    valid_referers none blocked 192.168.31.20;</span><br><span class="line"></span><br><span class="line">    if ($invalid_referer) &#123;</span><br><span class="line">        return 403;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>valid_referers</code> 会根据 Referer 头设置 <code>$invalid_referer</code></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">none          允许没有 Referer</span><br><span class="line">blocked       允许 Referer 被代理或防火墙隐藏的情况</span><br><span class="line">server_names  允许 server_name 中的主机名</span><br></pre></td></tr></table></figure>
+
+<p>如果 Referer 不符合规则，<code>$invalid_referer</code> 就是 1，于是返回 403</p>
+<p>这个功能适合减少图片、音视频等资源被别人页面直接引用。它不是强安全手段，因为 Referer 可以伪造，但对普通盗链和爬虫有一定效果</p>
+<h2 id="虚拟主机"><a href="#虚拟主机" class="headerlink" title="虚拟主机"></a>虚拟主机</h2><p>虚拟主机的本质是：一台真实服务器上跑多个逻辑网站</p>
+<p>Nginx 的匹配逻辑可以简化为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">先看连接进入哪个 listen IP:port</span><br><span class="line">再看 Host 匹配哪个 server_name</span><br><span class="line">匹配不到就走 default_server 或当前 listen 组第一个 server</span><br></pre></td></tr></table></figure>
+
+<p>所以可以基于三种方式区分：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">IP</span><br><span class="line">端口</span><br><span class="line">域名</span><br></pre></td></tr></table></figure>
+
+<h3 id="基于-IP"><a href="#基于-IP" class="headerlink" title="基于 IP"></a>基于 IP</h3><p>需要本机有多个 IP</p>
+<p>配置：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 192.168.0.129:80;</span><br><span class="line">    location / &#123;</span><br><span class="line">       root /opt/nginx/html/web01;</span><br><span class="line">       index index.html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen 192.168.0.130:80;</span><br><span class="line">    location / &#123;</span><br><span class="line">       root /opt/nginx/html/web02;</span><br><span class="line">       index index.html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>访问不同 IP，进入不同目录，这种方式成本高，因为真实公网环境需要多个 IP，所以企业里不常作为首选</p>
+<h3 id="基于端口"><a href="#基于端口" class="headerlink" title="基于端口"></a>基于端口</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    location / &#123;</span><br><span class="line">        root /opt/nginx/html/web01;</span><br><span class="line">        index index.html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen 8080;</span><br><span class="line">    location / &#123;</span><br><span class="line">        root /opt/nginx/html/web02;</span><br><span class="line">       index index.html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>访问：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.0.129/</span><br><span class="line">http://192.168.0.129:8080/</span><br></pre></td></tr></table></figure>
+
+<p>端口型虚拟主机更适合内部服务，公网用户一般不喜欢记端口</p>
+<h3 id="基于域名"><a href="#基于域名" class="headerlink" title="基于域名"></a>基于域名</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name www.abc.com;</span><br><span class="line"></span><br><span class="line">    location /web1 &#123;</span><br><span class="line">       root html;</span><br><span class="line">        index index.html;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name www.aaa.com;</span><br><span class="line"></span><br><span class="line">    location /web2 &#123;</span><br><span class="line">        root html;</span><br><span class="line">        index index.html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>域名型最符合真实业务使用方式，测试时要配 hosts 或 DNS，让域名解析到 Nginx 服务器</p>
+<h2 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h2><p>正向代理代理的是客户端</p>
+<p>客户端必须知道代理服务器地址，并主动配置。VPN、公司出口代理、某些软件代理都属于这个方向，VPN 还通常带有加密隧道，不只是简单 HTTP 代理</p>
+<p>反向代理代理的是服务端</p>
+<p>用户不知道后端是谁，只知道访问 Nginx ，Nginx 再把请求转发到内部服务器</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    location / &#123;</span><br><span class="line">        proxy_pass http://192.168.31.23:80;</span><br><span class="line">        proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果后端要记录真实客户端 IP，需要日志格式配合：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">log_format main &#x27;$http_x_real_ip|$http_x_forwarded_for - $remote_user [$time_local] &quot;$request&quot; &#x27;</span><br><span class="line">                &#x27;$status $body_bytes_sent &quot;$http_referer&quot; &#x27;</span><br><span class="line">                &#x27;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>否则后端看到的来源只是前端 Nginx</p>
+<h2 id="限速"><a href="#限速" class="headerlink" title="限速"></a>限速</h2><p>Nginx 限速涉及三个概念：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">limit_req   限制请求频率</span><br><span class="line">limit_conn  限制并发连接</span><br><span class="line">limit_rate  限制响应传输速度</span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>limit_req</code> 和 <code>limit_conn</code> 需要提前创建区域，而 <code>limit_rate</code> 不需要</p>
+<p><code>limit_req</code> 基于漏桶算法。请求像水一样进入桶，Nginx 按固定速度处理，超过容量就丢弃</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">limit_req_zone $binary_remote_addr zone=myzone:10m rate=1r/s;</span><br><span class="line">                 </span><br><span class="line">location / &#123;</span><br><span class="line">    limit_req zone=myzone burst=5 nodelay;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">创建区域，根据二进制ip分类，区域名 myzone 10m空间 每秒一次请求</span><br><span class="line"></span><br><span class="line">使用 myzone 区域</span><br><span class="line">允许突发 5 个</span><br><span class="line">nodelay 表示超过突发能力后直接返回 503</span><br></pre></td></tr></table></figure>
+
+<p>下载限制通常用：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">limit_conn_zone $binary_remote_addr zone=down:10m;</span><br><span class="line"></span><br><span class="line">location /download/ &#123;</span><br><span class="line">   limit_conn down 1;</span><br><span class="line">   limit_rate 10k;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">limit_conn down 1 表示同一个 IP 同时只能有 1 个连接进入这个限制区域</span><br><span class="line">limit_rate 10k 是每连接限速，不是每用户总限速。如果一个用户开多个连接，总速度会叠加，所以下载限速通常要和 limit_conn 一起配</span><br></pre></td></tr></table></figure>
+
+<p>如果把下载限制写在 <code>location /</code>，下载和网页都会抢同一个连接额度，所以下载资源要放到单独目录进行限速</p>
+<h2 id="URL-重写-与-rewrite-模块"><a href="#URL-重写-与-rewrite-模块" class="headerlink" title="URL 重写 与 rewrite 模块"></a>URL 重写 与 rewrite 模块</h2><p>Nginx 的 rewrite 基于 PCRE 正则，用于 URL 重写、跳转和内部 URI 改写</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">语法：</span><br><span class="line">rewrite 正则 替换内容 flag;</span><br></pre></td></tr></table></figure>
+
+<p>常见 flag：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">permanent  301 永久重定向，浏览器地址栏变化</span><br><span class="line">redirect   302 临时重定向，浏览器地址栏变化</span><br><span class="line">last       停止当前 rewrite 指令集，用新 URI 重新匹配 location</span><br><span class="line">break      停止当前 rewrite 指令集，不重新匹配 location</span><br></pre></td></tr></table></figure>
+
+<p>如果替换内容以 <code>http://</code>、<code>https://</code> 或 <code>$scheme</code> 开头，也会变成外部跳转，默认临时重定向</p>
+<p>如果不写 flag，容易按默认行为继续处理，实际效果接近继续走 rewrite 流程</p>
+<p><strong>目录一定要小心结尾 &#x2F;</strong></p>
+<p>如果 rewrite 到的是目录，最好写成如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rewrite passwd$ /dir/ last;</span><br></pre></td></tr></table></figure>
+
+<p>而不是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rewrite passwd$ /dir last;</span><br></pre></td></tr></table></figure>
+
+<p>因为 <code>/dir</code> 如果对应文件系统里的目录，Nginx 可能自动返回 301，把地址补成 <code>/dir/</code>。这时浏览器地址栏会变化，而 <code>break</code> 或 <code>last</code> 跳转的跳转并不会改变浏览器地址栏，同时因为是目录规范化触发了 301，后续 flag 并不会生效</p>
+<h3 id="rewrite-里的变量、if、return、break"><a href="#rewrite-里的变量、if、return、break" class="headerlink" title="rewrite 里的变量、if、return、break"></a><strong>rewrite 里的变量、if、return、break</strong></h3><p>Nginx 变量都是字符串。可以用 <code>set</code> 定义：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set $test 1111;</span><br><span class="line">rewrite ^(.*)$ http://192.168.111.12/$test/ permanent;</span><br></pre></td></tr></table></figure>
+
+<p>变量作用范围和定义位置有关：在 <code>server</code> 里定义，该 server 内的 location 可以用；在 <code>location</code> 里定义，主要就在当前 location 中使用</p>
+<p><code>if</code> 可以根据变量判断：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if ($http_user_agent ~* &#x27;elinks&#x27;) &#123;</span><br><span class="line">    return 404;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这表示 User-Agent 包含 elinks 就返回 404</p>
+<p><code>return</code> 也是 rewrite 模块的指令，它会直接结束请求</p>
+<p><code>break</code> 则不结束请求，只是停止后续 rewrite 模块指令：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if ($http_user_agent ~* &#x27;elinks&#x27;) &#123;</span><br><span class="line">    break;</span><br><span class="line">    return 404;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段里 <code>break</code> 执行后，后面的 <code>return 404</code> 不会执行。请求并没有被拒绝，而是继续走当前 location 的普通内容处理，所以最后可能仍然返回正常页面</p>
+<p><strong>break 只是不再执行 rewrite 指令，如 return set if 等，其余不影响</strong></p>
+<p><strong>不要把 Nginx 配置理解成 Shell 脚本</strong></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://threcial.github.io">Threcial</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://threcial.github.io/web%E6%9C%8D%E5%8A%A1/nginx-%E5%8A%9F%E8%83%BD%E9%85%8D%E7%BD%AE/">https://threcial.github.io/web%E6%9C%8D%E5%8A%A1/nginx-%E5%8A%9F%E8%83%BD%E9%85%8D%E7%BD%AE/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://threcial.github.io" target="_blank">Threcial</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/nginx/">nginx</a><a class="post-meta__tags" href="/tags/%E9%85%8D%E7%BD%AE/">配置</a></div><div class="post-share"><div class="social-share" data-image="/img/covers/cover-050.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/web%E6%9C%8D%E5%8A%A1/nginx-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E9%85%8D%E7%BD%AE/" title="Nginx 性能优化配置"><img class="cover" src="/img/covers/cover-052.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Nginx 性能优化配置</div></div><div class="info-2"><div class="info-item-1">Nginx 默认参数偏保守，适合最小硬件环境。真实业务里通常会调整 高并发优化：worker 和连接数12345worker_processes auto;events &#123;    worker_connections 4096;&#125;  worker_processes 通常按 CPU 核心数设置，直接 auto 就可以 worker_connections 是每个 worker 的最大连接数，可以从 4096 起步，并且习惯上取 2 的指数。如果 Nginx 是反向代理，一个客户端请求可能同时占用客户端连接和后端连接，所以理论连接数不能简单等于客户端数量 长连接优化：keepaliveHTTP 基于 TCP，每次短连接都要三次握手、四次挥手。keepalive 的作用就是复用连接 12keepalive_timeout 15;keepalive_requests 8192;  默认是 65 秒，建议改到 15 秒左右，太长会让空闲连接长期占用 fd、worker_connections 和内存 keepalive_requests 表示一个长连接最多处理多少个请...</div></div></div></a><a class="pagination-related" href="/web%E6%9C%8D%E5%8A%A1/nginx-%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/" title="nginx 基本配置"><img class="cover" src="/img/covers/cover-051.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">nginx 基本配置</div></div><div class="info-2"><div class="info-item-1">Nginx 可以做 Web 服务器、反向代理服务器，也能承担邮件代理相关功能。它比较典型的特点是轻量、资源消耗低、并发能力强。 和 Apache 相比，Nginx 的优势主要来自事件驱动和异步非阻塞模型。Apache 更偏阻塞式处理，请求多了以后进程&#x2F;线程资源压力会变大；Nginx 借助 epoll 模型，用较少的 worker 来处理大量连接。 Nginx 是典型的 master + worker 模型。master 负责读取配置、管理 worker ，worker 负责处理请求。 12345通过yum安装的nginx有以下四个重要目录/etc/nginx 					nginx所有的文件和配置都在这个目录/usr/share/nginx/html				网站根目录/var/log/nginx					nginx日志目录/var/cache/nginx                                缓存目录  本文重点就在于 nginx 配置文件写法 结构Nginx 配置不是平铺的，它按上下文划分，一个常见的配置文件 nginx.conf 如 12345...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/web%E6%9C%8D%E5%8A%A1/nginx-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E9%85%8D%E7%BD%AE/" title="Nginx 性能优化配置"><img class="cover" src="/img/covers/cover-052.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-31</div><div class="info-item-2">Nginx 性能优化配置</div></div><div class="info-2"><div class="info-item-1">Nginx 默认参数偏保守，适合最小硬件环境。真实业务里通常会调整 高并发优化：worker 和连接数12345worker_processes auto;events &#123;    worker_connections 4096;&#125;  worker_processes 通常按 CPU 核心数设置，直接 auto 就可以 worker_connections 是每个 worker 的最大连接数，可以从 4096 起步，并且习惯上取 2 的指数。如果 Nginx 是反向代理，一个客户端请求可能同时占用客户端连接和后端连接，所以理论连接数不能简单等于客户端数量 长连接优化：keepaliveHTTP 基于 TCP，每次短连接都要三次握手、四次挥手。keepalive 的作用就是复用连接 12keepalive_timeout 15;keepalive_requests 8192;  默认是 65 秒，建议改到 15 秒左右，太长会让空闲连接长期占用 fd、worker_connections 和内存 keepalive_requests 表示一个长连接最多处理多少个请...</div></div></div></a><a class="pagination-related" href="/web%E6%9C%8D%E5%8A%A1/nginx-%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/" title="nginx 基本配置"><img class="cover" src="/img/covers/cover-051.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-30</div><div class="info-item-2">nginx 基本配置</div></div><div class="info-2"><div class="info-item-1">Nginx 可以做 Web 服务器、反向代理服务器，也能承担邮件代理相关功能。它比较典型的特点是轻量、资源消耗低、并发能力强。 和 Apache 相比，Nginx 的优势主要来自事件驱动和异步非阻塞模型。Apache 更偏阻塞式处理，请求多了以后进程&#x2F;线程资源压力会变大；Nginx 借助 epoll 模型，用较少的 worker 来处理大量连接。 Nginx 是典型的 master + worker 模型。master 负责读取配置、管理 worker ，worker 负责处理请求。 12345通过yum安装的nginx有以下四个重要目录/etc/nginx 					nginx所有的文件和配置都在这个目录/usr/share/nginx/html				网站根目录/var/log/nginx					nginx日志目录/var/cache/nginx                                缓存目录  本文重点就在于 nginx 配置文件写法 结构Nginx 配置不是平铺的，它按上下文划分，一个常见的配置文件 nginx.conf 如 12345...</div></div></div></a><a class="pagination-related" href="/linux/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%AE%B0%E5%BD%95/" title="网站性能优化记录"><img class="cover" src="/img/covers/cover-060.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-03</div><div class="info-item-2">网站性能优化记录</div></div><div class="info-2"><div class="info-item-1">服务器环境：Linux、Nginx、PHP、WordPress、Sakurairo 主题服务器类型：轻量应用服务器优化目标：提高网站访问速度、降低资源占用、增强基础安全防护、减少异常访问对服务器的影响。  1. Linux 系统层优化1.1 增加 Swap 交换空间服务器为轻量应用服务器，默认未配置 Swap。在内存较小的情况下，PHP、MySQL、Nginx 或 WordPress 后台任务可能会导致内存瞬间升高，严重时触发 OOM，导致服务异常退出。 12345free -hdd if=/dev/zero of=/swapfile bs=1M count=2048chmod 600 /swapfilemkswap /swapfileswapon /swapfile  设置开机自动挂载 1echo &#x27;/swapfile none swap sw 0 0&#x27; &gt;&gt; /etc/fstab  调整 Swap 使用优先级 12echo &#x27;vm.swappiness = 60&#x27; &gt;&gt; /etc/sysctl.confsysct...</div></div></div></a><a class="pagination-related" href="/web%E6%9C%8D%E5%8A%A1/nginx%E7%9A%84%E4%B8%80%E4%BA%9B%E5%88%9D%E6%AD%A5%E9%85%8D%E7%BD%AE/" title="Nginx的一些初步配置"><img class="cover" src="/img/covers/cover-024.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-17</div><div class="info-item-2">Nginx的一些初步配置</div></div><div class="info-2"><div class="info-item-1">前情提要：在centos7上通过源码编译安装了nginx并配置了systemctl管理工具 为了让nginx能够正常使用，通常需要创建一个用户如 12useradd nginx -s /sbin/nologin -M 无登录无家目录chown -R nginx:nginx /usr/local/nginx 让nginx用户拥有程序文件的权限  为了方便使用 1234567ln -s /usr/local/nginx/sbin/nginx /sbin/nginx 创建软链接以便命令行直接使用nginx命令ngnix -t 检查nginx配置文件语法nginx -T 查看所有配置内容nginx -s reload 重载nginx -s stop 停止nginx start 启动  通过启动nginx就可以访问本地网站了 conf文件中的server块12345678910server &#123;    listen       80;    server_name  localhost;    #access_log  logs/host.access.log  main;    ...</div></div></div></a><a class="pagination-related" href="/linux/ssh%E8%BF%9E%E6%8E%A5%E7%9A%84%E7%AE%80%E5%8D%95%E4%BE%BF%E6%8D%B7%E9%85%8D%E7%BD%AE/" title="ssh连接的简单便捷配置"><img class="cover" src="/img/covers/cover-037.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-04</div><div class="info-item-2">ssh连接的简单便捷配置</div></div><div class="info-2"><div class="info-item-1">主要记录ssh密钥连接的一些配置 ssh支持密钥连接而无需密码。客户端上通过ssh-keygen命令即可生成一个密钥对，私钥保留本地公钥上传服务端。以本地windows服务端linux为例，私钥在保证不泄露的情况下可以存放在任一位置，公钥需要放在linux端的用户目录的.ssh目录下，命名为authorized_keys。 在服务端中可以通过修改&#x2F;etc&#x2F;ssh&#x2F;sshd_config文件来修改配置，包括但不限于允许root用户通过ssh登录、禁止密码登录、ssh的登录端口。 通过在客户端的.ssh目录下添加config文件可以更方便的使用ssh功能，以下为例 12345Host 任意名字    HostName 服务端ip    User 用户名    Port 服务端的sshd端口    IdentityFile 存放私钥的路径  配置这样一个config文件可以实现仅用ssh 任意名字就能登录服务端 </div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.svg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Threcial</div><div class="author-info-description">Threcial 的技术笔记？</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">63</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">60</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Threcial"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Threcial" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fas fa-rss" style="color: #f26522;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这里记录 Linux 运维、计算机网络与网络安全的学习笔记。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6-allow-deny-%E5%92%8C-auth-basic"><span class="toc-number">1.</span> <span class="toc-text">访问控制 allow &#x2F; deny 和 auth_basic</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%B2%E7%9B%97%E9%93%BE"><span class="toc-number">2.</span> <span class="toc-text">防盗链</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA"><span class="toc-number">3.</span> <span class="toc-text">虚拟主机</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E-IP"><span class="toc-number">3.1.</span> <span class="toc-text">基于 IP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E7%AB%AF%E5%8F%A3"><span class="toc-number">3.2.</span> <span class="toc-text">基于端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E5%9F%9F%E5%90%8D"><span class="toc-number">3.3.</span> <span class="toc-text">基于域名</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-number">4.</span> <span class="toc-text">反向代理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%90%E9%80%9F"><span class="toc-number">5.</span> <span class="toc-text">限速</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#URL-%E9%87%8D%E5%86%99-%E4%B8%8E-rewrite-%E6%A8%A1%E5%9D%97"><span class="toc-number">6.</span> <span class="toc-text">URL 重写 与 rewrite 模块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#rewrite-%E9%87%8C%E7%9A%84%E5%8F%98%E9%87%8F%E3%80%81if%E3%80%81return%E3%80%81break"><span class="toc-number">6.1.</span> <span class="toc-text">rewrite 里的变量、if、return、break</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/linux/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%AE%B0%E5%BD%95/" title="网站性能优化记录"><img src="/img/covers/cover-060.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="网站性能优化记录"/></a><div class="content"><a class="title" href="/linux/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%AE%B0%E5%BD%95/" title="网站性能优化记录">网站性能优化记录</a><time datetime="2026-07-03T07:51:56.000Z" title="发表于 2026-07-03 15:51:56">2026-07-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/docker/docker%E5%9F%BA%E7%A1%80/" title="Docker基础"><img src="/img/covers/cover-001.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Docker基础"/></a><div class="content"><a class="title" href="/docker/docker%E5%9F%BA%E7%A1%80/" title="Docker基础">Docker基础</a><time datetime="2026-06-15T07:10:25.000Z" title="发表于 2026-06-15 15:10:25">2026-06-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E4%B8%8E%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="MySQL 备份恢复与主从复制"><img src="/img/covers/cover-002.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL 备份恢复与主从复制"/></a><div class="content"><a class="title" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E4%B8%8E%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="MySQL 备份恢复与主从复制">MySQL 备份恢复与主从复制</a><time datetime="2026-06-07T02:22:41.000Z" title="发表于 2026-06-07 10:22:41">2026-06-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E3%80%81%E8%A7%A6%E5%8F%91%E5%99%A8%E3%80%81%E7%B4%A2%E5%BC%95/" title="MySQL 常用函数、触发器、索引"><img src="/img/covers/cover-003.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL 常用函数、触发器、索引"/></a><div class="content"><a class="title" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E3%80%81%E8%A7%A6%E5%8F%91%E5%99%A8%E3%80%81%E7%B4%A2%E5%BC%95/" title="MySQL 常用函数、触发器、索引">MySQL 常用函数、触发器、索引</a><time datetime="2026-06-06T12:40:56.000Z" title="发表于 2026-06-06 20:40:56">2026-06-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E4%BA%8B%E5%8A%A1%E3%80%81%E8%A7%86%E5%9B%BE%E3%80%81%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" title="MySQL 事务、视图、存储过程"><img src="/img/covers/cover-049.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL 事务、视图、存储过程"/></a><div class="content"><a class="title" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E4%BA%8B%E5%8A%A1%E3%80%81%E8%A7%86%E5%9B%BE%E3%80%81%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" title="MySQL 事务、视图、存储过程">MySQL 事务、视图、存储过程</a><time datetime="2026-06-06T12:14:32.000Z" title="发表于 2026-06-06 20:14:32">2026-06-06</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Threcial</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.7.1.260810</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.1.260810"></script><script src="/js/main.js?v=5.7.1.260810"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

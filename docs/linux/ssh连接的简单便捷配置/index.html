@@ -1,0 +1,217 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ssh连接的简单便捷配置 | Threcial</title><meta name="author" content="Threcial"><meta name="copyright" content="Threcial"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="主要记录ssh密钥连接的一些配置 ssh支持密钥连接而无需密码。客户端上通过ssh-keygen命令即可生成一个密钥对，私钥保留本地公钥上传服务端。以本地windows服务端linux为例，私钥在保证">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ssh连接的简单便捷配置">
+<meta property="og:url" content="https://threcial.github.io/linux/ssh%E8%BF%9E%E6%8E%A5%E7%9A%84%E7%AE%80%E5%8D%95%E4%BE%BF%E6%8D%B7%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:site_name" content="Threcial">
+<meta property="og:description" content="主要记录ssh密钥连接的一些配置 ssh支持密钥连接而无需密码。客户端上通过ssh-keygen命令即可生成一个密钥对，私钥保留本地公钥上传服务端。以本地windows服务端linux为例，私钥在保证">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://threcial.github.io/img/covers/cover-037.png">
+<meta property="article:published_time" content="2026-04-04T03:06:28.000Z">
+<meta property="article:modified_time" content="2026-04-04T03:06:28.000Z">
+<meta property="article:author" content="Threcial">
+<meta property="article:tag" content="ssh">
+<meta property="article:tag" content="配置">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://threcial.github.io/img/covers/cover-037.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ssh连接的简单便捷配置",
+  "url": "https://threcial.github.io/linux/ssh%E8%BF%9E%E6%8E%A5%E7%9A%84%E7%AE%80%E5%8D%95%E4%BE%BF%E6%8D%B7%E9%85%8D%E7%BD%AE/",
+  "image": "https://threcial.github.io/img/covers/cover-037.png",
+  "datePublished": "2026-04-04T03:06:28.000Z",
+  "dateModified": "2026-04-04T03:06:28.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Threcial",
+      "url": "https://threcial.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.svg"><link rel="canonical" href="https://threcial.github.io/linux/ssh%E8%BF%9E%E6%8E%A5%E7%9A%84%E7%AE%80%E5%8D%95%E4%BE%BF%E6%8D%B7%E9%85%8D%E7%BD%AE/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.7.1.260810"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        try {
+          const data = { value }
+
+          if (ttl != null) {
+            data.expiry = Date.now() + ttl * 86400000
+          }
+
+          localStorage.setItem(key, JSON.stringify(data))
+        } catch (e) {
+          console.error(e)
+        }
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ssh连接的简单便捷配置',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="Threcial" type="application/atom+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/covers/cover-056.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.svg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">63</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">60</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img fixed" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Threcial</span></a><a class="nav-page-title" href="/"><span class="site-name">ssh连接的简单便捷配置</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">ssh连接的简单便捷配置</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-04T03:06:28.000Z" title="发表于 2026-04-04 11:06:28">2026-04-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-04T03:06:28.000Z" title="更新于 2026-04-04 11:06:28">2026-04-04</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/linux/">linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="container post-content" id="article-container"><p>主要记录ssh密钥连接的一些配置</p>
+<p>ssh支持密钥连接而无需密码。客户端上通过<code>ssh-keygen</code>命令即可生成一个密钥对，私钥保留本地公钥上传服务端。以本地windows服务端linux为例，私钥在保证不泄露的情况下可以存放在任一位置，公钥需要放在linux端的用户目录的.ssh目录下，命名为authorized_keys。</p>
+<p>在服务端中可以通过修改&#x2F;etc&#x2F;ssh&#x2F;sshd_config文件来修改配置，包括但不限于允许root用户通过ssh登录、禁止密码登录、ssh的登录端口。</p>
+<p>通过在客户端的.ssh目录下添加config文件可以更方便的使用ssh功能，以下为例</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Host 任意名字</span><br><span class="line">    HostName 服务端ip</span><br><span class="line">    User 用户名</span><br><span class="line">    Port 服务端的sshd端口</span><br><span class="line">    IdentityFile 存放私钥的路径</span><br></pre></td></tr></table></figure>
+
+<p>配置这样一个config文件可以实现仅用<code>ssh 任意名字</code>就能登录服务端</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://threcial.github.io">Threcial</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://threcial.github.io/linux/ssh%E8%BF%9E%E6%8E%A5%E7%9A%84%E7%AE%80%E5%8D%95%E4%BE%BF%E6%8D%B7%E9%85%8D%E7%BD%AE/">https://threcial.github.io/linux/ssh%E8%BF%9E%E6%8E%A5%E7%9A%84%E7%AE%80%E5%8D%95%E4%BE%BF%E6%8D%B7%E9%85%8D%E7%BD%AE/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://threcial.github.io" target="_blank">Threcial</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%85%8D%E7%BD%AE/">配置</a><a class="post-meta__tags" href="/tags/ssh/">ssh</a></div><div class="post-share"><div class="social-share" data-image="/img/covers/cover-037.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/sql%E6%B3%A8%E5%85%A5/" title="SQL注入"><img class="cover" src="/img/covers/cover-053.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">SQL注入</div></div><div class="info-2"><div class="info-item-1">SQL注入中的可利用的库表和列information_schema.tables 所有库和表的统计 12table_schema  table_name    information_schema.columns 包含库名，表名，列名 123table_schema table_namecolumn_name  mysql.innodb_table_stats 12table_name database_name  mysql.innodb_index_stats 12table_name database_name  sys.schema_table_statistics 12table_schema table_name  sys.schema_table_statistics_with_buffer 12table_schema table_name  sys.schema_auto_increment_columns 12table_schema table_name  注入前的基本功何种注入类型主要分为字符型注入和数字型注入 在注入点用单引号双引号或单纯数字测试即可得出...</div></div></div></a><a class="pagination-related" href="/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E5%9F%BA%E6%9C%AC%E8%AE%BE%E8%AE%A1/" title="网络安全需求分析与基本设计"><img class="cover" src="/img/covers/cover-038.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">网络安全需求分析与基本设计</div></div><div class="info-2"><div class="info-item-1">需求分析 资产识别与价值评估  确定需要保护的对象 1234567891011数据资产：客户信息、知识产权、财务数据、源代码、运营数据等软件资产：操作系统、数据库、业务应用、中间件等硬件资产：服务器、网络设备（交换机、路由器）、安全设备（防火墙）、终端电脑、移动设备等服务资产：业务系统（如电商平台、OA系统）、网络服务等人员资产：员工、管理员、供应商等输出：一份详细的资产清单，并对每项资产的机密性、完整性、可用性 要求进行评估和分级（例如：高、中、低）   威胁识别  识别可能对资产造成损害的潜在来源或事件。 1234567外部威胁：黑客、竞争对手、有组织的犯罪集团、国家支持的攻击等内部威胁：不满的员工、疏忽的员工、操作失误环境威胁：自然灾害（火灾、水灾、地震）、停电、硬件故障输出：一份威胁清单，描述威胁来源和威胁类型（如：DDoS攻击、勒索软件、数据泄露、内部越权）   脆弱性识别  找出资产自身存在的、可能被威胁利用的弱点 1234567技术脆弱性：软件漏洞、不安全的网络架构、弱密码、未加密的通信管理脆弱性：缺乏安全策略、员工安全意识不足、没有应急响应计划物理脆弱性：机房大门...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/web%E6%9C%8D%E5%8A%A1/nginx-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E9%85%8D%E7%BD%AE/" title="Nginx 性能优化配置"><img class="cover" src="/img/covers/cover-052.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-31</div><div class="info-item-2">Nginx 性能优化配置</div></div><div class="info-2"><div class="info-item-1">Nginx 默认参数偏保守，适合最小硬件环境。真实业务里通常会调整 高并发优化：worker 和连接数12345worker_processes auto;events &#123;    worker_connections 4096;&#125;  worker_processes 通常按 CPU 核心数设置，直接 auto 就可以 worker_connections 是每个 worker 的最大连接数，可以从 4096 起步，并且习惯上取 2 的指数。如果 Nginx 是反向代理，一个客户端请求可能同时占用客户端连接和后端连接，所以理论连接数不能简单等于客户端数量 长连接优化：keepaliveHTTP 基于 TCP，每次短连接都要三次握手、四次挥手。keepalive 的作用就是复用连接 12keepalive_timeout 15;keepalive_requests 8192;  默认是 65 秒，建议改到 15 秒左右，太长会让空闲连接长期占用 fd、worker_connections 和内存 keepalive_requests 表示一个长连接最多处理多少个请...</div></div></div></a><a class="pagination-related" href="/web%E6%9C%8D%E5%8A%A1/nginx-%E5%8A%9F%E8%83%BD%E9%85%8D%E7%BD%AE/" title="Nginx 功能配置"><img class="cover" src="/img/covers/cover-050.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-30</div><div class="info-item-2">Nginx 功能配置</div></div><div class="info-2"><div class="info-item-1">访问控制 allow &#x2F; deny 和 auth_basicNginx 可以按 IP 做访问控制： 123456location /a/ &#123;    allow 127.0.0.1;    allow 117.51.154.71;    allow 192.168.31.0/24;    deny all;&#125;  顺序是从上往下判断。上面这段意思是：允许本机、指定公网 IP、指定网段访问，其他全部拒绝。 如果不是按 IP，而是要求输入用户名密码，就用 Basic Auth： 1234location /b/ &#123;    auth_basic &quot;test&quot;;    test只是一个名字，可以任意    auth_basic_user_file /opt/nginx/passwd/htpasswd;  密码文件路径&#125;  密码文件可以用 htpasswd 生成： 1234yum install httpd-tools -y                     下载 httpasswdmkdir -p /opt/ngin...</div></div></div></a><a class="pagination-related" href="/web%E6%9C%8D%E5%8A%A1/nginx-%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/" title="nginx 基本配置"><img class="cover" src="/img/covers/cover-051.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-30</div><div class="info-item-2">nginx 基本配置</div></div><div class="info-2"><div class="info-item-1">Nginx 可以做 Web 服务器、反向代理服务器，也能承担邮件代理相关功能。它比较典型的特点是轻量、资源消耗低、并发能力强。 和 Apache 相比，Nginx 的优势主要来自事件驱动和异步非阻塞模型。Apache 更偏阻塞式处理，请求多了以后进程&#x2F;线程资源压力会变大；Nginx 借助 epoll 模型，用较少的 worker 来处理大量连接。 Nginx 是典型的 master + worker 模型。master 负责读取配置、管理 worker ，worker 负责处理请求。 12345通过yum安装的nginx有以下四个重要目录/etc/nginx 					nginx所有的文件和配置都在这个目录/usr/share/nginx/html				网站根目录/var/log/nginx					nginx日志目录/var/cache/nginx                                缓存目录  本文重点就在于 nginx 配置文件写法 结构Nginx 配置不是平铺的，它按上下文划分，一个常见的配置文件 nginx.conf 如 12345...</div></div></div></a><a class="pagination-related" href="/net/ssh%E8%BF%9E%E6%8E%A5%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/" title="SSH连接网络设备"><img class="cover" src="/img/covers/cover-020.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-23</div><div class="info-item-2">SSH连接网络设备</div></div><div class="info-2"><div class="info-item-1">telnet连接方式缺少安全认证，数据传输过程也采用明文传输，存在极大安全隐患，且单纯telnet服务容易招致Dos（Denial of Service）、主机ip地址欺骗、路由欺骗等恶意攻击。 因此ssh协议目前使用更加广泛，ssh是一个网络安全协议，通过对网络传输数据加密、安全登录等方式来构建一个安全的通道，ssh默认使用22端口，支持修改端口号 SSH登录配置被登录方配置12345678910stelnet server enable     开启ssh服务rsa local-key-pair create     创建密钥，使用密钥加密在aaa视图中的额外配置local-user username service-type ssh 服务类型设为ssh在vty视图中的额外配置protocol inbound ssh     绑定ssh协议ssh user username authentication-type all 支持ssh用户本地认证方式为全部  登录方配置12ssh client first-time enable 首次登录开启客户登录功能stelnet ip 在...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.svg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Threcial</div><div class="author-info-description">Threcial 的技术笔记？</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">63</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">60</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Threcial"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Threcial" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fas fa-rss" style="color: #f26522;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这里记录 Linux 运维、计算机网络与网络安全的学习笔记。</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/linux/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%AE%B0%E5%BD%95/" title="网站性能优化记录"><img src="/img/covers/cover-060.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="网站性能优化记录"/></a><div class="content"><a class="title" href="/linux/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%AE%B0%E5%BD%95/" title="网站性能优化记录">网站性能优化记录</a><time datetime="2026-07-03T07:51:56.000Z" title="发表于 2026-07-03 15:51:56">2026-07-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/docker/docker%E5%9F%BA%E7%A1%80/" title="Docker基础"><img src="/img/covers/cover-001.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Docker基础"/></a><div class="content"><a class="title" href="/docker/docker%E5%9F%BA%E7%A1%80/" title="Docker基础">Docker基础</a><time datetime="2026-06-15T07:10:25.000Z" title="发表于 2026-06-15 15:10:25">2026-06-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E4%B8%8E%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="MySQL 备份恢复与主从复制"><img src="/img/covers/cover-002.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL 备份恢复与主从复制"/></a><div class="content"><a class="title" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E4%B8%8E%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="MySQL 备份恢复与主从复制">MySQL 备份恢复与主从复制</a><time datetime="2026-06-07T02:22:41.000Z" title="发表于 2026-06-07 10:22:41">2026-06-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E3%80%81%E8%A7%A6%E5%8F%91%E5%99%A8%E3%80%81%E7%B4%A2%E5%BC%95/" title="MySQL 常用函数、触发器、索引"><img src="/img/covers/cover-003.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL 常用函数、触发器、索引"/></a><div class="content"><a class="title" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E3%80%81%E8%A7%A6%E5%8F%91%E5%99%A8%E3%80%81%E7%B4%A2%E5%BC%95/" title="MySQL 常用函数、触发器、索引">MySQL 常用函数、触发器、索引</a><time datetime="2026-06-06T12:40:56.000Z" title="发表于 2026-06-06 20:40:56">2026-06-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E4%BA%8B%E5%8A%A1%E3%80%81%E8%A7%86%E5%9B%BE%E3%80%81%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" title="MySQL 事务、视图、存储过程"><img src="/img/covers/cover-049.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL 事务、视图、存储过程"/></a><div class="content"><a class="title" href="/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E4%BA%8B%E5%8A%A1%E3%80%81%E8%A7%86%E5%9B%BE%E3%80%81%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" title="MySQL 事务、视图、存储过程">MySQL 事务、视图、存储过程</a><time datetime="2026-06-06T12:14:32.000Z" title="发表于 2026-06-06 20:14:32">2026-06-06</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Threcial</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.7.1.260810</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.1.260810"></script><script src="/js/main.js?v=5.7.1.260810"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
