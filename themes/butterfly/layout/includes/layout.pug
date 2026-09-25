@@ -12,12 +12,15 @@ html(lang=config.language data-theme=theme.display_mode class=htmlClassHideAside
   body
     !=partial('includes/loading/index', {}, {cache: true})
 
-    if theme.background
-      if !Array.isArray(theme.background)
-        #web_bg.bg-animation(style=getBgPath(theme.background))
+    //- 【本机补丁】页面级背景优先：文章页用该篇的封面图，其他页面用 theme.background。
+    - var postBg = globalPageType === 'post' ? page.cover : ''
+    - var webBg = page.background || postBg || theme.background
+    if webBg
+      if !Array.isArray(webBg)
+        #web_bg.bg-animation(style=getBgPath(webBg))
       else
         #web_bg.bg-animation
-        - const bgStyleArr = theme.background.map(getBgPath)
+        - const bgStyleArr = webBg.map(getBgPath)
         script.
           (() => {
             const arr = !{JSON.stringify(bgStyleArr)}
