@@ -32,7 +32,7 @@ hexo.extend.helper.register('related_posts', function (currentPost) {
           updated: post.updated,
           created: post.date,
           post,
-          // 原为 Math.random()：同权重文章每次生成顺序都变，破坏构建幂等性
+          // 【本机补丁】原为 Math.random()：同权重文章每次生成顺序都变，破坏构建幂等性
           // （每次同步都会推送 30+ 个仅顺序不同的文件）。改为按日期作稳定 tie-breaker。
           random: new Date(post.date).getTime() || 0
         })
